@@ -1,0 +1,11 @@
+{
+  "name": "@consensys/eventsea",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {},
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "hardhat": "^2.17.2",
+    "typechain": "^8.1.1"
+  }
+}

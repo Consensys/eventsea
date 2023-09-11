@@ -12,7 +12,7 @@
     "tsconfig": "*",
     "turbo": "latest"
   },
-  "name": "eventsea",
+  "name": "@consensys/eventsea",
   "packageManager": "npm@9.6.6",
   "workspaces": [
     "apps/*",
