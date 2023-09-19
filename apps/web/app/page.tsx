@@ -1,8 +1,11 @@
+import { Button } from "@ui/Button";
+import { Navbar } from "@components/Navbar";
 
 export default function Page(): JSX.Element {
   return (
-    <main className="text-red-500">
-      <h1>ZK-tiketing</h1>
+    <main>
+      <Navbar />
+      <Button>Click me</Button>
     </main>
   );
 }
