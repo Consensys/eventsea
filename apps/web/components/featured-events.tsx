@@ -18,7 +18,6 @@ export default async function FeaturedEvents() {
       return `${formatDate(dateTime.start)} - ${formatDate(dateTime.end)}`;
     }
   };
-  
 
   return (
     <div className="container max-w-6xl py-6 lg:py-10">
@@ -44,30 +43,20 @@ export default async function FeaturedEvents() {
               <p className="text-sm absolute whitespace-nowrap opacity-0 text-[#09090B] transition-opacity duration-300  left-2 group-hover:opacity-100">
                 Get ticket
               </p>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <g id="Frame">
-                  <path
-                    id="Vector"
-                    d="M9 3L14 8M14 8L9 13M14 8H2"
-                    stroke="#0C200A"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </g>
-              </svg>
+              <Image
+                src="/right-arrow.svg"
+                width={16}
+                height={16}
+                alt="Follow us on Twitter"
+              />
             </button>
             <div className="p-4 absolute bottom-0 w-full bg-white left-0 space-y-1 border transition-transform ease-linear duration-300 group-hover:translate-x-4 group-hover:translate-y-4 border-[#E4E4E7] rounded-lg font-semibold h-1/3">
               <h2 className="text-sm text-[#09090B] ">{event.title}</h2>
 
               <p className="text-xs text-[#52525B]">{event.location.address}</p>
-              <p className="text-xs text-[#52525B]">{formatEventDate(event.dateTime)}</p>
+              <p className="text-xs text-[#52525B]">
+                {formatEventDate(event.dateTime)}
+              </p>
             </div>
           </article>
         ))}
