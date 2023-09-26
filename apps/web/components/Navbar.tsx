@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import EventSeaLogo from "./icons/EventSeaLogo";
-import WalletIcon from "./icons/WalletIcon";
-import SearchIcon from "./icons/SearchIcon";
+import EventSeaLogo from "../public/icons/EventSeaLogo";
+import WalletIcon from "../public/icons/WalletIcon";
+import SearchIcon from "../public/icons/SearchIcon";
 import { Button } from "./ui/Button";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
