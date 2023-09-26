@@ -17,7 +17,7 @@ export default function RootLayout({
 }): JSX.Element {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className="bg-[#F4F4F5] px-3 py-2 md:py-3 lg:px-0">
         <NavBar />
         {children}
       </body>

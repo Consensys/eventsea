@@ -3,80 +3,28 @@
 import Link from "next/link";
 import EventSeaLogo from "../public/icons/EventSeaLogo";
 import WalletIcon from "../public/icons/WalletIcon";
-import SearchIcon from "../public/icons/SearchIcon";
+
 import { Button } from "./ui/Button";
-import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { SearchBar } from "./SearchBar";
 
 export const NavBar = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
-
   return (
-    <nav className="flex items-center justify-between py-4">
+    <nav className="flex mx-auto px-6 py-7 bg-white border rounded-xl items-center justify-between max-w-screen-xl">
       {/* EventSeaLogo on the left */}
       <Link href="/" className="flex gap-1 pl-6">
         <EventSeaLogo />
         <span className="text-2xl font-bold sm:block hidden">
-          <span style={{ color: "#0C200A" }}>Event</span>
-          <span style={{ color: "#4C6D07" }}>Sea</span>
+          <span className="text-[#0C200A]">Event</span>
+          <span className="text-[#4C6D07]">Sea</span>
         </span>
       </Link>
 
-      <div className="flex items-center gap-4">
-        {/* Search bar with search icon for larger screens */}
-        <div className={`relative w-64 hidden sm:block`}>
-          {searchValue === "" && (
-            <SearchIcon className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-          )}
-          <input
-            type="text"
-            placeholder={searchValue === "" ? "Find your event" : ""}
-            className="border rounded-md p-2 pl-8 pr-8 w-full"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-          />
-          {searchValue === "" && (
-            <span className="absolute right-2.5 top-1/2 transform -translate-y-1/2">
-              ⌘ K
-            </span>
-          )}
-        </div>
-
-        {/* Search icon for smaller screens */}
-        <div className="sm:hidden">
-          <Popover>
-            <PopoverTrigger>
-              <SearchIcon className="w-5 h-5" />
-            </PopoverTrigger>
-            <PopoverContent>
-              <div className="relative w-64">
-                {searchValue === "" && (
-                  <SearchIcon className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-                )}
-                <input
-                  type="text"
-                  placeholder={searchValue === "" ? "Find your event" : ""}
-                  className="border rounded-md p-2 pl-8 pr-8 w-full"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                />
-                {searchValue === "" && (
-                  <span className="absolute right-2.5 top-1/2 transform -translate-y-1/2">
-                    ⌘ K
-                  </span>
-                )}
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        {/* Login button with WalletIcon */}
-        <div className="pr-6">
-          <Button variant="primary">
-            <WalletIcon className="mr-2 h-4 w-4" /> LogIn
-          </Button>
-        </div>
+      {/* Login button with WalletIcon */}
+      <div className="flex gap-4 pr-6">
+        <SearchBar />
+        <Button variant="primary">
+          <WalletIcon className="mr-2 h-4 w-4" /> LogIn
+        </Button>
       </div>
     </nav>
   );
