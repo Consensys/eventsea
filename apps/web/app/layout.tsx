@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
+import NavBar from "@components/Navbar";
 
 export const metadata: Metadata = {
   title: "Create Turborepo",
@@ -16,6 +17,7 @@ export default function RootLayout({
 }): JSX.Element {
   return (
     <html lang="en">
+      <NavBar />
       <body className={inter.className}>{children}</body>
     </html>
   );
