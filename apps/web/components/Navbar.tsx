@@ -11,7 +11,7 @@ export const NavBar = () => {
   return (
     <nav className="flex mx-auto px-6 py-7 bg-white border rounded-xl items-center justify-between max-w-screen-xl">
       {/* EventSeaLogo on the left */}
-      <Link href="/" className="flex gap-1 pl-6">
+      <Link href="/" className="flex gap-1 px-6">
         <EventSeaLogo />
         <span className="text-2xl font-bold sm:block hidden">
           <span className="text-[#0C200A]">Event</span>
@@ -20,7 +20,7 @@ export const NavBar = () => {
       </Link>
 
       {/* Login button with WalletIcon */}
-      <div className="flex gap-4 pr-6">
+      <div className="flex gap-4 px-6">
         <SearchBar />
         <Button variant="primary">
           <WalletIcon className="mr-2 h-4 w-4" /> LogIn
