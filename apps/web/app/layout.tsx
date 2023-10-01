@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import CreateEventForm from "@/components/create-event-form";
 
 const inter = Inter({ subsets: ["latin"] });
 import NavBar from "@/components/Navbar";
