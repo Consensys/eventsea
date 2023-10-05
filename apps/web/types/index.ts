@@ -19,6 +19,15 @@ export namespace EventSea {
     Other = "Other",
   }
 
+  export enum Currency {
+    BTC = "BTC",
+    ETH = "ETH",
+    USDT = "USDT",
+    USD = "USD",
+    EUR = "EUR",
+    GBP = "GBP",
+  }
+
   interface TicketTier {
     name: string;
     price: number;
