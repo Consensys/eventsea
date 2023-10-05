@@ -2,10 +2,19 @@
   "name": "@consensys/eventsea",
   "version": "0.0.0",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "compile": "hardhat compile",
+    "dev": "npm run compile && npm run generate-types"
+  },
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@typechain/ethers-v6": "^0.5.0",
     "dotenv": "^16.0.3",
-    "hardhat": "^2.17.2",
-    "typechain": "^8.1.1"
+    "erc721a": "^4.2.3",
+    "hardhat": "^2.17.4",
+    "typechain": "^8.3.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.3"
   }
 }
