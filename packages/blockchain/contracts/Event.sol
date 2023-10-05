@@ -8,11 +8,11 @@ contract Event {
     string public location;
     string public eventType;
     string public image;
-    string public eventID;
     uint public date;
+    address[] private attendeesArray;
 
     mapping(address => bool) public isAttending;
-    address[] private attendeesArray;
+    mapping(address => bool) public checkedIn;
 
     event AttendeeAdded(address attendee);
     event AttendeeRemoved(address attendee);
@@ -23,8 +23,7 @@ contract Event {
         string memory _location,
         string memory _eventType,
         string memory _image,
-        uint _date,
-        string memory _eventID
+        uint _date
     ) {
         owner = tx.origin;
         title = _title;
@@ -33,7 +32,6 @@ contract Event {
         eventType = _eventType;
         image = _image;
         date = _date;
-        eventID = _eventID;
     }
 
     modifier onlyOwner() {
@@ -80,5 +78,13 @@ contract Event {
 
     function getAllAttendees() public view returns (address[] memory) {
         return attendeesArray;
+    }
+
+    function checkIn(address _address) public onlyOwner() {
+        checkedIn[_address] = true;
+    }
+
+    function isCheckedIn(address _address) public view returns (bool) {
+        return checkedIn[_address];
     }
 }
