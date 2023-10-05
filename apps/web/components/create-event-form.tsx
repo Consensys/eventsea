@@ -38,29 +38,29 @@ import {
 import { useDropzone } from "react-dropzone";
 import ImagePreview from "./image-preview";
 
-const formSchema = z.object({
-  title: z.string().nonempty("Title is required"),
-  location: z.string().nonempty("Location is required"),
-  description: z.string(),
-  type: z.nativeEnum(EventSea.EventType),
-  image: z.instanceof(File).nullable(),
-  // @TODO add number validations for amountOfTickets and price
-  amountOfTickets: z.string(),
-  ticketPrice: z.object({
-    price: z.string(),
-    currency: z.nativeEnum(EventSea.Currency),
-  }),
-  dateTime: z.object({
-    from: z.date().optional(),
-    to: z.date().optional(),
-  }),
-});
-
 const NUM_OF_STEPS = 3;
 
 export default function CreateEventForm() {
   const [step, setStep] = useState(3);
   const [open, setOpen] = useState(false);
+
+  const formSchema = z.object({
+    title: z.string().nonempty("Title is required"),
+    location: z.string().nonempty("Location is required"),
+    description: z.string(),
+    type: z.nativeEnum(EventSea.EventType),
+    image: z.instanceof(File).nullable(),
+    // @TODO add number validations for amountOfTickets and price
+    amountOfTickets: z.string(),
+    ticketPrice: z.object({
+      price: z.string(),
+      currency: z.nativeEnum(EventSea.Currency),
+    }),
+    dateTime: z.object({
+      from: z.date().optional(),
+      to: z.date().optional(),
+    }),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -81,7 +81,7 @@ export default function CreateEventForm() {
     },
     mode: "onChange",
   });
- 
+
   const watchImage = form.watch("image");
 
   const {
