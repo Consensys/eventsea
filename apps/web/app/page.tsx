@@ -1,11 +1,9 @@
-import { Button } from "@ui/Button";
-import { Navbar } from "@components/Navbar";
+import  FeaturedEvents  from "@/components/featured-events"
 
 export default function Page(): JSX.Element {
   return (
-    <main>
-      <Navbar />
-      <Button>Click me</Button>
+    <main className="text-red-500">
+      <FeaturedEvents/>
     </main>
   );
 }
