@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { z } from "zod";
 import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/20/solid";
@@ -14,7 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { FC, useState } from "react";
 import { Button } from "./ui/Button";
 import { Calendar } from "@/components/ui/calendar";
 import { EventSea } from "@/types";
@@ -49,7 +49,12 @@ export default function CreateEventForm() {
     location: z.string().nonempty("Location is required"),
     description: z.string(),
     type: z.nativeEnum(EventSea.EventType),
-    image: z.instanceof(File).nullable(),
+    image: z.custom((value) => {
+      if (typeof File !== "undefined" && value instanceof File) {
+        return true;
+      }
+      return false;
+    }),
     // @TODO add number validations for amountOfTickets and price
     amountOfTickets: z.string(),
     ticketPrice: z.object({
