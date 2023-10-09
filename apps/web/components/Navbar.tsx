@@ -5,7 +5,7 @@
 import Link from "next/link";
 import EventSeaLogo from "../public/icons/EventSeaLogo";
 import WalletIcon from "../public/icons/WalletIcon";
-import CreateEvent from "@/components/create-event-form"
+import CreateEvent from "@/components/create-event-form";
 import { Button } from "./ui/Button";
 import { SearchBar } from "./SearchBar";
 import { useState } from "react";
@@ -51,12 +51,15 @@ export const ConnectWalletButton = () => {
 };
 
 export const NavBar = () => {
+  const host =
+    typeof window !== "undefined" ? window.location.host : "defaultHost";
+
   const sdkOptions = {
     logging: { developerMode: false },
     checkInstallationImmediately: false,
     dappMetadata: {
       name: "Demo React App",
-      url: window.location.host,
+      url: host, // using the host constant defined above
     },
   };
 
