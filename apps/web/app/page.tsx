@@ -1,5 +1,9 @@
-import NavBar from "@components/Navbar";
+import  FeaturedEvents  from "@/components/featured-events"
 
 export default function Page(): JSX.Element {
-  return <main></main>;
+  return (
+    <main className="text-red-500">
+      <FeaturedEvents/>
+    </main>
+  );
 }
