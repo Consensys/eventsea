@@ -58,7 +58,7 @@ export const NavBar = () => {
     logging: { developerMode: false },
     checkInstallationImmediately: false,
     dappMetadata: {
-      name: "Demo React App",
+      name: "EventSea",
       url: host, // using the host constant defined above
     },
   };
