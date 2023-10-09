@@ -18,7 +18,7 @@ export const ConnectWalletButton = () => {
 
   const connect = async () => {
     try {
-      const metaMaskAccount = (await sdk?.connect()) as string;
+      const metaMaskAccount = (await sdk?.connect()) as string[];
       setAccount(metaMaskAccount[0]);
     } catch (err) {
       console.warn(`No accounts found`, err);
