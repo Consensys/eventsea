@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "compile": "hardhat compile",
-    "dev": "npm run compile && npm run generate-types"
+    "dev": "hardhat node",
+    "migrate:local": "hardhat run --network localhost scripts/deploy.ts"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
