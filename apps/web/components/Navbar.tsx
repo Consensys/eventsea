@@ -52,7 +52,7 @@ export const ConnectWalletButton = () => {
               {" "}
               {/* Added z-10 for higher z-index */}
               <button className="block w-full px-4 py-2 text-left hover:bg-gray-200">
-                Your Events
+                My Events
               </button>
               <button className="block w-full px-4 py-2 text-left hover:bg-gray-200">
                 Wallet Details
