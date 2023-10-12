@@ -14,6 +14,7 @@ import { formatAddress } from "./../lib/utils";
 
 export const ConnectWalletButton = () => {
   const [account, setAccount] = useState<string | undefined>();
+  const [showDropdown, setShowDropdown] = useState(false); // State to manage dropdown visibility
   const { sdk, connected, connecting } = useSDK();
 
   const connect = async () => {
@@ -33,20 +34,44 @@ export const ConnectWalletButton = () => {
   };
 
   return (
-    <>
+    <div
+      onMouseEnter={() => setShowDropdown(true)} // Show dropdown on hover
+      onMouseLeave={() => setShowDropdown(false)} // Hide dropdown when not hovering
+      className="relative" // Ensure dropdown is positioned relative to this container
+    >
       {connected ? (
-        <div>
-          {formatAddress(account)}{" "}
-          {/* Using the formatAddress utility function */}
-          <button onClick={disconnect}>DISCONNECT</button>{" "}
-          {/* Disconnect button */}
-        </div>
+        <>
+          <Button
+            variant="primary"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            {formatAddress(account)}
+          </Button>
+          {showDropdown && ( // Conditionally render dropdown based on state
+            <div className="absolute mt-2 w-56 h-32 bg-white border rounded-md shadow-lg right-0 z-10">
+              {" "}
+              {/* Added z-10 for higher z-index */}
+              <button className="block w-full px-4 py-2 text-left hover:bg-gray-200">
+                Your Events
+              </button>
+              <button className="block w-full px-4 py-2 text-left hover:bg-gray-200">
+                Wallet Details
+              </button>
+              <button
+                onClick={disconnect}
+                className="block w-full px-4 py-2 text-left text-[#F05252] hover:bg-gray-200"
+              >
+                Disconnect
+              </button>
+            </div>
+          )}
+        </>
       ) : (
         <Button variant="primary" disabled={connecting} onClick={connect}>
-          <WalletIcon className="mr-2 h-4 w-4" /> Connect MetaMask
+          <WalletIcon className="mr-2 h-4 w-4" /> Login
         </Button>
       )}
-    </>
+    </div>
   );
 };
 
