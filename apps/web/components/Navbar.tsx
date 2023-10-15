@@ -11,10 +11,15 @@ import { SearchBar } from "./SearchBar";
 import { useState } from "react";
 import { useSDK, MetaMaskProvider } from "@metamask/sdk-react";
 import { formatAddress } from "./../lib/utils";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 
 export const ConnectWalletButton = () => {
   const [account, setAccount] = useState<string | undefined>();
-  const [showDropdown, setShowDropdown] = useState(false); // State to manage dropdown visibility
+
   const { sdk, connected, connecting } = useSDK();
 
   const connect = async () => {
@@ -34,38 +39,27 @@ export const ConnectWalletButton = () => {
   };
 
   return (
-    <div
-      onMouseEnter={() => setShowDropdown(true)} // Show dropdown on hover
-      onMouseLeave={() => setShowDropdown(false)} // Hide dropdown when not hovering
-      className="relative" // Ensure dropdown is positioned relative to this container
-    >
+    <div className="relative">
       {connected ? (
-        <>
-          <Button
-            variant="primary"
-            onClick={() => setShowDropdown(!showDropdown)}
-          >
-            {formatAddress(account)}
-          </Button>
-          {showDropdown && ( // Conditionally render dropdown based on state
-            <div className="absolute mt-2 w-56 h-32 bg-white border rounded-md shadow-lg right-0 z-10">
-              {" "}
-              {/* Added z-10 for higher z-index */}
-              <button className="block w-full px-4 py-2 text-left hover:bg-gray-200">
-                My Events
-              </button>
-              <button className="block w-full px-4 py-2 text-left hover:bg-gray-200">
-                Wallet Details
-              </button>
-              <button
-                onClick={disconnect}
-                className="block w-full px-4 py-2 text-left text-[#F05252] hover:bg-gray-200"
-              >
-                Disconnect
-              </button>
-            </div>
-          )}
-        </>
+        <Popover>
+          <PopoverTrigger>
+            <Button variant="primary">{formatAddress(account)}</Button>
+          </PopoverTrigger>
+          <PopoverContent className="mt-2 w-44 bg-white border rounded-md shadow-lg right-0 z-10 top-10">
+            <button className="block w-full pl-2 pr-4 py-2 text-left hover:bg-gray-200">
+              My Events
+            </button>
+            <button className="block w-full pl-2 pr-4 py-2 text-left hover:bg-gray-200">
+              Wallet Details
+            </button>
+            <button
+              onClick={disconnect}
+              className="block w-full pl-2 pr-4 py-2 text-left text-[#F05252] hover:bg-gray-200"
+            >
+              Disconnect
+            </button>
+          </PopoverContent>
+        </Popover>
       ) : (
         <Button variant="primary" disabled={connecting} onClick={connect}>
           <WalletIcon className="mr-2 h-4 w-4" /> Login
