@@ -31,6 +31,8 @@ contract EventsFactory {
         string memory location,
         string memory eventType,
         string memory image,
+        uint ticketPrice,
+        uint amountOfTickets,
         uint date,
         string memory name,
         string memory symbol,
@@ -43,6 +45,8 @@ contract EventsFactory {
             location,
             eventType,
             image,
+            ticketPrice,
+            amountOfTickets,
             date
         );
 

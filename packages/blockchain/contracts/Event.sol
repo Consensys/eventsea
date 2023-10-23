@@ -9,6 +9,8 @@ contract Event {
     string public eventType;
     string public image;
     uint public date;
+    uint public ticketPrice;
+    uint public amountOfTickets;
     address[] private attendeesArray;
 
     mapping(address => bool) public isAttending;
@@ -23,6 +25,8 @@ contract Event {
         string memory _location,
         string memory _eventType,
         string memory _image,
+        uint _ticketPrice,
+        uint _amountOfTickets,
         uint _date
     ) {
         owner = tx.origin;
@@ -74,6 +78,14 @@ contract Event {
     function getAttendee(uint _index) public view returns (address) {
         require(_index < attendeesArray.length, "Index out of bounds");
         return attendeesArray[_index];
+    }
+
+    function setPrice(uint _price) public onlyOwner {
+        ticketPrice = _price;
+    }
+
+    function setTicketAmount(uint _ticketAmount) public onlyOwner {
+        amountOfTickets = _ticketAmount;
     }
 
     function getAllAttendees() public view returns (address[] memory) {
