@@ -29,7 +29,7 @@
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",
     "ui": "*",
-    "zod": "^3.21.4",
+    "zod": "^3.22.3",
     "@heroicons/react": "^2.0.18",
     "react-dropzone": "^14.2.3"
   },
