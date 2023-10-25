@@ -33,6 +33,8 @@ contract Event {
         title = _title;
         description = _description;
         location = _location;
+        ticketPrice = _ticketPrice;
+        amountOfTickets = _amountOfTickets;
         eventType = _eventType;
         image = _image;
         date = _date;
