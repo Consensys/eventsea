@@ -11,9 +11,15 @@ import { SearchBar } from "./SearchBar";
 import { useState } from "react";
 import { useSDK, MetaMaskProvider } from "@metamask/sdk-react";
 import { formatAddress } from "./../lib/utils";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 
 export const ConnectWalletButton = () => {
   const [account, setAccount] = useState<string | undefined>();
+
   const { sdk, connected, connecting } = useSDK();
 
   const connect = async () => {
@@ -33,20 +39,33 @@ export const ConnectWalletButton = () => {
   };
 
   return (
-    <>
+    <div className="relative">
       {connected ? (
-        <div>
-          {formatAddress(account)}{" "}
-          {/* Using the formatAddress utility function */}
-          <button onClick={disconnect}>DISCONNECT</button>{" "}
-          {/* Disconnect button */}
-        </div>
+        <Popover>
+          <PopoverTrigger>
+            <Button variant="primary">{formatAddress(account)}</Button>
+          </PopoverTrigger>
+          <PopoverContent className="mt-2 w-44 bg-white border rounded-md shadow-lg right-0 z-10 top-10">
+            <button className="block w-full pl-2 pr-4 py-2 text-left hover:bg-gray-200">
+              My Events
+            </button>
+            <button className="block w-full pl-2 pr-4 py-2 text-left hover:bg-gray-200">
+              Wallet Details
+            </button>
+            <button
+              onClick={disconnect}
+              className="block w-full pl-2 pr-4 py-2 text-left text-[#F05252] hover:bg-gray-200"
+            >
+              Disconnect
+            </button>
+          </PopoverContent>
+        </Popover>
       ) : (
         <Button variant="primary" disabled={connecting} onClick={connect}>
-          <WalletIcon className="mr-2 h-4 w-4" /> Connect MetaMask
+          <WalletIcon className="mr-2 h-4 w-4" /> Login
         </Button>
       )}
-    </>
+    </div>
   );
 };
 

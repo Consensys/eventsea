@@ -33,11 +33,7 @@ contract EventsFactory {
         string memory image,
         uint ticketPrice,
         uint amountOfTickets,
-        uint date,
-        string memory name,
-        string memory symbol,
-        string memory contractBaseURI,
-        uint256 maxSupply
+        uint date
     ) public returns (Event) {
         Event eventContract = new Event(
             title,
@@ -50,6 +46,16 @@ contract EventsFactory {
             date
         );
 
+        emit EventCreated(msg.sender, address(eventContract), title, date);
+        return eventContract;
+    }
+
+    function createTicket(
+        string memory name,
+        string memory symbol,
+        string memory contractBaseURI,
+        uint256 maxSupply
+    ) public returns (Ticket) {
         Ticket ticketContract = createNFTTickets(
             name,
             symbol,
@@ -57,15 +63,18 @@ contract EventsFactory {
             maxSupply
         );
 
-        eventDetails.push(
-            EventDetail({
-                eventContract: eventContract,
-                ticketContract: ticketContract
-            })
-        );
+        return ticketContract;
+    }
 
-        emit EventCreated(msg.sender, address(eventContract), title, date);
-        return eventContract;
+    function setEventStruct(
+        Event eventContract,
+        Ticket ticketContract
+    ) internal {
+        EventDetail memory eventDetail = EventDetail({
+            eventContract: eventContract,
+            ticketContract: ticketContract
+        });
+        eventDetails.push(eventDetail);
     }
 
     function getEvents() public view returns (Event[] memory) {

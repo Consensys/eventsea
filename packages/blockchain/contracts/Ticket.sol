@@ -2,11 +2,10 @@
 pragma solidity ^0.8.13;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "erc721a/contracts/ERC721A.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
-contract Ticket is ERC721A, Ownable, Pausable {
+contract Ticket is ERC721A, Ownable(tx.origin), Pausable {
     uint256 public MAX_SUPPLY;
     uint256 public PRICE = 0.001 ether;
     uint256 public constant MAX_PER_MINT = 5;
