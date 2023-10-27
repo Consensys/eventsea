@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { format } from "date-fns";
 import { events } from "@/mock-data";
 import { EventSea } from "@/types";
+import Image from "next/image";
 
 export const metadata = {
   title: "Blog",
@@ -31,11 +31,9 @@ export default async function FeaturedEvents() {
             className="relative flex flex-col aspect-square group"
           >
             <div className="relative h-full overflow-hidden transition-transform duration-300 ease-in-out origin-top rounded-lg group-hover:scale-y-95 group-hover:scale-x-105">
-              <Image
+              <img
                 src={event?.images?.[0] || "/public/images/default.png"}
                 alt={event.title}
-                objectFit="cover"
-                fill={true}
                 className="duration-150 origin-center transform rounded-lg group-hover:scale-110 "
               />
             </div>
@@ -43,7 +41,7 @@ export default async function FeaturedEvents() {
               <p className="text-sm absolute whitespace-nowrap opacity-0 text-[#09090B] transition-opacity duration-300  left-2 group-hover:opacity-100">
                 Get ticket
               </p>
-              <Image
+              <img
                 src="/right-arrow.svg"
                 width={16}
                 height={16}
