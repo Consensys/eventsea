@@ -5,11 +5,16 @@ import { useState } from "react";
 import { events } from "../mock-data";
 import { Button } from "./ui/Button";
 
-const GetTickets = () => {
+interface GetTicketsProps {
+  event: {
+    ticketInfo: { price: number }[];
+  };
+}
+
+const GetTickets: React.FC<GetTicketsProps> = ({ event }) => {
   const [numberOfTickets, setNumberOfTickets] = useState(0);
 
-  // Get the price of the first ticket type of the first event
-  const ticketPrice = events[0].ticketInfo[0].price;
+  const ticketPrice = event.ticketInfo[0].price;
 
   const handleIncrement = () => {
     setNumberOfTickets((prevCount) => prevCount + 1);
@@ -18,7 +23,6 @@ const GetTickets = () => {
   const handleDecrement = () => {
     setNumberOfTickets((prevCount) => prevCount - 1);
   };
-
   return (
     <div className="bg-white p-8 rounded shadow-md w-64">
       <div className="flex justify-between items-center mb-4">

@@ -5,9 +5,6 @@ export default function Page(): JSX.Element {
   return (
     <main className="text-red-500">
       <FeaturedEvents />
-      <Link href={`/events`}>
-        <div>Go to Event Details</div>
-      </Link>
     </main>
   );
 }

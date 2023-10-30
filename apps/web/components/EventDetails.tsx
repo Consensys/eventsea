@@ -19,7 +19,16 @@ const EventDetails: React.FC<EventDetailsProps> = ({ eventId }) => {
   const date = new Date(Number(dateTime) * 1000).toLocaleDateString();
 
   return (
-    <div className="p-6 bg-white shadow-lg rounded-md mb-8">
+    <div className="p-6 bg-white shadow-lg rounded-md mb-8 relative">
+      <Image
+        src="/green-bg.webp"
+        layout="fill"
+        objectFit="cover"
+        quality={100}
+        className="absolute top-0 left-0 z-[-1]"
+        alt="Background image"
+      />
+
       <div className="relative w-full h-[300px] rounded-md mb-4 overflow-hidden">
         {images && images[0] && (
           <Image src={images[0]} alt={title} layout="fill" objectFit="cover" />
@@ -54,7 +63,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({ eventId }) => {
         </div>
 
         <div className="ml-6 w-1/3">
-          <GetTickets />
+          <GetTickets event={event} />
         </div>
       </div>
     </div>
