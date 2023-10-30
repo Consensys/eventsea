@@ -12,6 +12,7 @@ contract Ticket is ERC721A, Ownable(tx.origin), Pausable {
     address public eventOwner;
     uint256 public tokenId = totalSupply();
     string public _contractBaseURI;
+    uint public _ticketPrice;
 
     event PermanentURI(string _value, uint256 indexed _id, address indexed _to);
     event TicketMinted(address indexed _to, uint256 indexed _tokenId);
@@ -20,11 +21,13 @@ contract Ticket is ERC721A, Ownable(tx.origin), Pausable {
         string memory name,
         string memory symbol,
         string memory contractBaseURI,
-        uint256 maxSupply
+        uint256 maxSupply,
+        uint ticketPrice
     ) ERC721A(name, symbol) {
         MAX_SUPPLY = maxSupply;
         eventOwner = tx.origin;
         _contractBaseURI = contractBaseURI;
+        _ticketPrice = ticketPrice;
     }
 
     modifier onlyEventOwner() {
@@ -92,4 +95,10 @@ contract Ticket is ERC721A, Ownable(tx.origin), Pausable {
     function tokenMeta(uint256 _tokenId) public view returns (string memory) {
         return tokenURI(_tokenId);
     }
+
+
+    function setPrice(uint _price) public onlyOwner {
+        _ticketPrice = _price;
+    }
+
 }

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
+import "./Ticket.sol";
+
 contract Event {
     address public owner;
     string public title;
@@ -8,14 +10,18 @@ contract Event {
     string public location;
     string public eventType;
     string public image;
+    address public ticketNFT;
     uint public date;
-    uint public ticketPrice;
-    uint public amountOfTickets;
     address[] private attendeesArray;
 
     mapping(address => bool) public isAttending;
     mapping(address => bool) public checkedIn;
 
+    event TicketAssociated(
+        address indexed owner,
+        address indexed ticketAddress,
+        string name
+    );
     event AttendeeAdded(address attendee);
     event AttendeeRemoved(address attendee);
 
@@ -25,19 +31,30 @@ contract Event {
         string memory _location,
         string memory _eventType,
         string memory _image,
-        uint _ticketPrice,
-        uint _amountOfTickets,
-        uint _date
+        string memory symbol,
+        uint _date,
+        uint ticketPrice,
+        uint amountOfTickets
     ) {
         owner = tx.origin;
         title = _title;
         description = _description;
         location = _location;
-        ticketPrice = _ticketPrice;
-        amountOfTickets = _amountOfTickets;
         eventType = _eventType;
         image = _image;
         date = _date;
+
+        Ticket ticketContract = new Ticket(
+            title,
+            symbol,
+            "ipfs/url",
+            amountOfTickets,
+            ticketPrice
+        );
+
+        emit TicketAssociated(msg.sender, address(ticketContract), title);
+
+        ticketNFT = address(ticketContract);
     }
 
     modifier onlyOwner() {
@@ -82,19 +99,11 @@ contract Event {
         return attendeesArray[_index];
     }
 
-    function setPrice(uint _price) public onlyOwner {
-        ticketPrice = _price;
-    }
-
-    function setTicketAmount(uint _ticketAmount) public onlyOwner {
-        amountOfTickets = _ticketAmount;
-    }
-
     function getAllAttendees() public view returns (address[] memory) {
         return attendeesArray;
     }
 
-    function checkIn(address _address) public onlyOwner() {
+    function checkIn(address _address) public onlyOwner {
         checkedIn[_address] = true;
     }
 
