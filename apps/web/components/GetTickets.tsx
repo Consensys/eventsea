@@ -2,7 +2,6 @@
 
 // GetTickets.tsx
 import { useState } from "react";
-import { events } from "../mock-data";
 import { Button } from "./ui/Button";
 
 interface GetTicketsProps {
@@ -24,7 +23,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({ event }) => {
     setNumberOfTickets((prevCount) => prevCount - 1);
   };
   return (
-    <div className="bg-white p-8 rounded shadow-md w-64">
+    <div className="bg-white p-8 rounded-xl shadow-xl w-3/4 mx-auto">
       <div className="flex justify-between items-center mb-4">
         <span className="text-gray-600">Ticket Price</span>
         <span>{ticketPrice}ETH</span>
@@ -34,15 +33,15 @@ const GetTickets: React.FC<GetTicketsProps> = ({ event }) => {
         <div className="flex">
           <button
             onClick={handleDecrement}
-            className="bg-gray-200 p-2 rounded-l focus:outline-none"
+            className="bg-gray-200 py-1 px-4 rounded-xl focus:outline-none"
             disabled={numberOfTickets <= 1}
           >
             -
           </button>
-          <span className="px-4 py-2 bg-gray-100">{numberOfTickets}</span>
+          <span className="px-4 py-2">{numberOfTickets}</span>
           <button
             onClick={handleIncrement}
-            className="bg-gray-200 p-2 rounded-r focus:outline-none"
+            className="bg-gray-200 py-1 px-4 rounded-xl focus:outline-none"
           >
             +
           </button>

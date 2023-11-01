@@ -1,15 +1,15 @@
-// EventDetails.tsx
-import React from "react";
-import GetTickets from "./GetTickets";
-import Image from "next/image";
 import { events } from "@/mock-data";
-import LocationIcon from "./icons/LocationIcon";
+import GetTickets from "@/components/GetTickets";
+import LocationIcon from "@/components/icons/LocationIcon";
+import Image from "next/image";
 
-interface EventDetailsProps {
-  eventId: string;
-}
+type PageProps = {
+  params: {
+    eventId: string;
+  };
+};
 
-const EventDetails: React.FC<EventDetailsProps> = ({ eventId }) => {
+const EventPage = ({ params: { eventId } }: PageProps) => {
   const event = events.find((event) => event.id === eventId);
 
   if (!event) {
@@ -68,7 +68,11 @@ const EventDetails: React.FC<EventDetailsProps> = ({ eventId }) => {
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d467690.14373023267!2d-46.92493746247684!3d-23.68206359528588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce448183a461d1%3A0x9ba94b08ff335bae!2sS%C3%A3o%20Paulo%2C%20State%20of%20S%C3%A3o%20Paulo%2C%20Brazil!5e0!3m2!1sen!2spe!4v1698854401265!5m2!1sen!2spe"
                 width="600"
                 height="450"
-                style={{ border: 0.5, borderStyle: "solid", borderColor: "#ccc" }}
+                style={{
+                  border: 0.5,
+                  borderStyle: "solid",
+                  borderColor: "#ccc",
+                }}
                 loading="lazy"
               ></iframe>
             </div>
@@ -83,4 +87,4 @@ const EventDetails: React.FC<EventDetailsProps> = ({ eventId }) => {
   );
 };
 
-export default EventDetails;
+export default EventPage;

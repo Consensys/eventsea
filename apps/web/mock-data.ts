@@ -8,7 +8,8 @@ export const events: EventSea.Event[] = [
       name: "chin",
     },
     title: "Sao Paulo Web3 Festival",
-    description: "cecwecwe",
+    description:
+      "The Sao Paulo Web3 Festival is a groundbreaking event that brings together innovators, thought leaders, and enthusiasts from across the globe to explore the limitless potential of Web3 technologies. Held in the vibrant heart of Sao Paulo, Brazil, this festival serves as a convergence point for blockchain, decentralized finance (DeFi), cryptocurrencies, NFTs, and the decentralized web.",
     tags: ["Web3"],
     location: {
       name: "oekce",

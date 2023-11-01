@@ -41,7 +41,7 @@ export default async function FeaturedEvents() {
               />
             </div>
 
-            <Link href={`/events`}>
+            <Link href={`/events/${event.id}`}>
               <button className="absolute bg-[#C4FF1C] h-10 flex justify-center group-hover:justify-end group-hover:pr-2  transition-all duration-300 ease-in-out items-center w-10 group-hover:w-28 rounded-md right-4 top-4">
                 <p className="text-sm absolute whitespace-nowrap opacity-0 text-[#09090B] transition-opacity duration-300  left-2 group-hover:opacity-100">
                   Get ticket
