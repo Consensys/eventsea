@@ -1,4 +1,5 @@
 import FeaturedEvents from "@/components/featured-events";
+import Link from "next/link";
 
 export default function Page(): JSX.Element {
   return (

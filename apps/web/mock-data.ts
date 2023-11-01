@@ -18,7 +18,7 @@ export const events: EventSea.Event[] = [
     ticketInfo: [
       {
         name: "ede",
-        price: 11,
+        price: 12,
       },
     ],
     dateTime: 1695654870, // Timestamp in UTC
@@ -69,7 +69,7 @@ export const events: EventSea.Event[] = [
     ticketInfo: [
       {
         name: "ede",
-        price: 11,
+        price: 21,
       },
     ],
     dateTime: {
@@ -98,7 +98,7 @@ export const events: EventSea.Event[] = [
     ticketInfo: [
       {
         name: "ede",
-        price: 11,
+        price: 22,
       },
     ],
     dateTime: 1695654870, // Timestamp in UTC
