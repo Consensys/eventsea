@@ -59,6 +59,7 @@ export namespace EventSea {
     eventType: EventType;
     ticketInfo: TicketTier[];
     dateTime: DateTime;
+    endDateTime?: number;
     participantCount: number;
     participants: Participant[];
     images?: string[];
