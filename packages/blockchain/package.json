@@ -8,12 +8,17 @@
     "migrate:local": "hardhat run --network localhost scripts/deploy.ts"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.4",
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
-    "@openzeppelin/contracts": "^5.0.0",
     "@typechain/ethers-v6": "^0.4.0",
     "dotenv": "^16.0.3",
     "erc721a": "^4.2.3",
-    "hardhat": "^2.18.2",
+    "ethers": "^6.1.0",
+    "hardhat": "^2.18.3",
     "typechain": "^8.3.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0",
+    "assertion-error": "^2.0.1"
   }
 }

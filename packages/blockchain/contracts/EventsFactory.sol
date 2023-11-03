@@ -2,15 +2,9 @@
 pragma solidity ^0.8.9;
 
 import "./Event.sol";
-import "./Ticket.sol";
 
 contract EventsFactory {
-    struct EventDetail {
-        Event eventContract;
-        Ticket ticketContract;
-    }
-
-    EventDetail[] private eventDetails;
+    Event[] private events;
 
     event EventCreated(
         address indexed owner,
@@ -19,21 +13,16 @@ contract EventsFactory {
         uint date
     );
 
-    event TicketAssociated(
-        address indexed owner,
-        address indexed ticketAddress,
-        string name
-    );
-
     function createEvent(
         string memory title,
         string memory description,
         string memory location,
         string memory eventType,
         string memory image,
+        string memory symbol,
+        uint date,
         uint ticketPrice,
-        uint amountOfTickets,
-        uint date
+        uint amountOfTickets
     ) public returns (Event) {
         Event eventContract = new Event(
             title,
@@ -41,74 +30,29 @@ contract EventsFactory {
             location,
             eventType,
             image,
+            symbol,
+            date,
             ticketPrice,
-            amountOfTickets,
-            date
+            amountOfTickets
         );
 
+        events.push(eventContract);
+
         emit EventCreated(msg.sender, address(eventContract), title, date);
+
         return eventContract;
     }
 
-    function createTicket(
-        string memory name,
-        string memory symbol,
-        string memory contractBaseURI,
-        uint256 maxSupply
-    ) public returns (Ticket) {
-        Ticket ticketContract = createNFTTickets(
-            name,
-            symbol,
-            contractBaseURI,
-            maxSupply
-        );
-
-        return ticketContract;
-    }
-
-    function setEventStruct(
-        Event eventContract,
-        Ticket ticketContract
-    ) internal {
-        EventDetail memory eventDetail = EventDetail({
-            eventContract: eventContract,
-            ticketContract: ticketContract
-        });
-        eventDetails.push(eventDetail);
-    }
-
     function getEvents() public view returns (Event[] memory) {
-        Event[] memory events = new Event[](eventDetails.length);
-        for (uint i = 0; i < eventDetails.length; i++) {
-            events[i] = eventDetails[i].eventContract;
+        Event[] memory eventsData = new Event[](events.length);
+        for (uint i = 0; i < events.length; i++) {
+            eventsData[i] = events[i];
         }
         return events;
     }
 
     function getEventById(uint id) public view returns (Event) {
-        require(id < eventDetails.length, "Event ID out of range");
-        return eventDetails[id].eventContract;
-    }
-
-    function getTicketByEventId(uint id) public view returns (Ticket) {
-        require(id < eventDetails.length, "Event ID out of range");
-        return eventDetails[id].ticketContract;
-    }
-
-    function createNFTTickets(
-        string memory name,
-        string memory symbol,
-        string memory contractBaseURI,
-        uint256 maxSupply
-    ) internal returns (Ticket) {
-        Ticket ticketContract = new Ticket(
-            name,
-            symbol,
-            contractBaseURI,
-            maxSupply
-        );
-
-        emit TicketAssociated(msg.sender, address(ticketContract), name);
-        return ticketContract;
+        require(id < events.length, "Event ID out of range");
+        return events[id];
     }
 }

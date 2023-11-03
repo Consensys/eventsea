@@ -25,7 +25,8 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@blockchain/*": ["../../packages/blockchain/*"]
     },
     "plugins": [
       {
