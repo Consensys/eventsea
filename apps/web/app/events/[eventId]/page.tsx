@@ -1,7 +1,10 @@
-import { events } from "@/mock-data";
+import { notFound } from "next/navigation";
 import GetTickets from "@/components/GetTickets";
 import LocationIcon from "@/components/icons/LocationIcon";
 import Image from "next/image";
+import { ContractPermission, getEventContract } from "@/lib/getEventContract";
+import { format } from "date-fns";
+import { getTicketContract } from "@/lib/getTicketContract";
 
 type PageProps = {
   params: {
@@ -9,18 +12,40 @@ type PageProps = {
   };
 };
 
-const EventPage = ({ params: { eventId } }: PageProps) => {
-  const event = events.find((event) => event.id === eventId);
-
-  if (!event) {
-    return <div>Event not found</div>;
+const EventPage = async ({ params: { eventId } }: PageProps) => {
+  if (!eventId) {
+    return notFound();
   }
 
-  const { title, tags, dateTime, description, location, images } = event;
-  const date = new Date(Number(dateTime) * 1000).toLocaleDateString();
+  const eventContact = await getEventContract({
+    address: eventId,
+    permission: ContractPermission.READ,
+  });
+
+  const eventData = await Promise.all([
+    eventContact.title(),
+    eventContact.description(),
+    eventContact.location(),
+    eventContact.eventType(),
+    eventContact.image(),
+    eventContact.date(),
+    eventContact.ticketNFT(),
+  ]);
+
+  const [title, description, location, eventType, image, date, ticketNFT] =
+    eventData;
+
+  const ticketContract = await getTicketContract({
+    address: ticketNFT,
+    permission: ContractPermission.READ,
+  });
+
+  const ticketPrice = await ticketContract._ticketPrice();
+
+  const formattedDate = format(new Date(Number(date) * 1000), "MMM. d");
 
   return (
-    <div className="py-6 px-16 flex flex-col gap-10 rounded-md mb-8">
+    <div className="flex flex-col gap-10 px-16 py-6 mb-8 rounded-md">
       <Image
         src="/green-bg.webp"
         width={1350}
@@ -31,38 +56,39 @@ const EventPage = ({ params: { eventId } }: PageProps) => {
       />
 
       <div className="relative w-full h-[450px] rounded-md mb-4 overflow-hidden">
-        {images && images[0] && (
-          <Image src={images[0]} alt={title} layout="fill" objectFit="cover" />
+        {image && (
+          <Image src={`https://eventsea.infura-ipfs.io/ipfs/${image}`} alt={title} layout="fill" objectFit="cover" />
         )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 justify-items-center">
         <div className="flex-1">
-          <h1 className="text-3xl font-bold mb-2">{title}</h1>
-          <span className="text-sm text-gray-500 bg-green-200 p-1 rounded-md inline-block mb-4">
-            {tags.join(", ")}
-          </span>
-
+          <h1 className="mb-2 text-3xl font-bold">{title}</h1>
+          {/* {tags && tags.length > 0 && (
+            <span className="inline-block p-1 mb-4 text-sm text-gray-500 bg-green-200 rounded-md">
+              {tags.join(", ")}
+            </span>
+          )} */}
           <div className="my-4">
-            <h3 className="text-lg font-semibold text-gray-700 mb-1">Date</h3>
-            <p className="text-gray-900">{date}</p>
+            <h3 className="mb-1 text-lg font-semibold text-gray-700">Date</h3>
+            <p className="text-gray-900">{formattedDate}</p>
           </div>
 
           <div className="my-4">
-            <h3 className="text-lg font-semibold text-gray-700 mb-1">
+            <h3 className="mb-1 text-lg font-semibold text-gray-700">
               Details
             </h3>
             <p className="text-gray-900">{description}</p>
           </div>
 
           <div className="my-4 space-y-6">
-            <h3 className="text-lg font-semibold text-gray-700 mb-1">
+            <h3 className="mb-1 text-lg font-semibold text-gray-700">
               Location
             </h3>
             <div>
-              <div className="flex gap-4 bg-white py-6 border-t border-l border-r rounded-ss-xl rounded-se-xl px-5">
+              <div className="flex gap-4 px-5 py-6 bg-white border-t border-l border-r rounded-ss-xl rounded-se-xl">
                 <LocationIcon />
-                <p className="text-gray-900">{location.address}</p>
+                <p className="text-gray-900">{location}</p>
               </div>
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d467690.14373023267!2d-46.92493746247684!3d-23.68206359528588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce448183a461d1%3A0x9ba94b08ff335bae!2sS%C3%A3o%20Paulo%2C%20State%20of%20S%C3%A3o%20Paulo%2C%20Brazil!5e0!3m2!1sen!2spe!4v1698854401265!5m2!1sen!2spe"
@@ -79,8 +105,8 @@ const EventPage = ({ params: { eventId } }: PageProps) => {
           </div>
         </div>
 
-        <div className=" w-full">
-          <GetTickets event={event} />
+        <div className="w-full ">
+          <GetTickets ticketPrice={Number(ticketPrice)} />
         </div>
       </div>
     </div>

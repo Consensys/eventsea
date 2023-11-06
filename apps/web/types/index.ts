@@ -1,7 +1,7 @@
 export namespace EventSea {
   interface Owner {
     address: string;
-    name: string;
+    name?: string;
     email?: string;
   }
 
@@ -29,6 +29,7 @@ export namespace EventSea {
   }
 
   interface TicketTier {
+    address: string
     name: string;
     price: number;
     availableTickets?: number;
@@ -47,20 +48,18 @@ export namespace EventSea {
     email?: string;
   }
 
-  export type DateTime = number | { start: number; end: number }; // Timestamp in UTC
-
   export interface Event {
     id: string;
     owner: Owner;
     title: string;
     description: string;
-    tags: string[];
     location: Location;
     eventType: EventType;
+    dateTime: number; // Timestamp in UTC
     ticketInfo: TicketTier[];
-    dateTime: DateTime;
-    participantCount: number;
-    participants: Participant[];
-    images?: string[];
+    participantCount?: number;
+    participants?: Participant[];
+    tags?: string[];
+    image: string;
   }
 }
