@@ -1,11 +1,7 @@
 import { ethers } from "ethers";
 import abi from "@blockchain/artifacts/contracts/EventsFactory.sol/EventsFactory.json";
 import { EventsFactory } from "@blockchain/typechain-types/contracts/EventsFactory";
-
-export enum ContractPermission {
-  READ,
-  WRITE,
-}
+import { ContractPermission } from "@/types";
 
 type Args = {
   permission: ContractPermission;

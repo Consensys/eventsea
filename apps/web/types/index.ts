@@ -1,3 +1,7 @@
+export enum ContractPermission {
+  READ,
+  WRITE,
+}
 export namespace EventSea {
   interface Owner {
     address: string;

@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "./ui/Button";
 import { Calendar } from "@/components/ui/calendar";
-import { EventSea } from "@/types";
+import { ContractPermission, EventSea } from "@/types";
 import {
   Form,
   FormControl,
@@ -38,7 +38,6 @@ import {
 import { useDropzone } from "react-dropzone";
 import ImagePreview from "./image-preview";
 import {
-  ContractPermission,
   getEventFactoryContract,
 } from "@/lib/getEventFactoryContract";
 import { add } from "@/lib/ipfs";

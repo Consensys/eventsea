@@ -1,11 +1,7 @@
 import { ethers } from "ethers";
 import { abi } from "@blockchain/artifacts/contracts/Ticket.sol/Ticket.json";
 import { Ticket } from "@blockchain/typechain-types/contracts/Ticket";
-
-export enum ContractPermission {
-  READ,
-  WRITE,
-}
+import { ContractPermission } from "@/types";
 
 type Args = {
   address: string;

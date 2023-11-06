@@ -2,9 +2,10 @@ import { notFound } from "next/navigation";
 import GetTickets from "@/components/GetTickets";
 import LocationIcon from "@/components/icons/LocationIcon";
 import Image from "next/image";
-import { ContractPermission, getEventContract } from "@/lib/getEventContract";
+import { getEventContract } from "@/lib/getEventContract";
 import { format } from "date-fns";
 import { getTicketContract } from "@/lib/getTicketContract";
+import { ContractPermission } from "@/types";
 
 type PageProps = {
   params: {

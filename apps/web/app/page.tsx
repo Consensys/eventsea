@@ -2,9 +2,8 @@ import FeaturedEvents from "@/components/featured-events";
 import { getEventContract } from "@/lib/getEventContract";
 import {
   getEventFactoryContract,
-  ContractPermission,
 } from "@/lib/getEventFactoryContract";
-import { EventSea } from "@/types";
+import { ContractPermission, EventSea } from "@/types";
 
 export default async function Page(): Promise<JSX.Element> {
   const eventsFactory = await getEventFactoryContract({
