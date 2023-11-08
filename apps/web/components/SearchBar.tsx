@@ -1,5 +1,4 @@
 import SearchIcon from "../public/icons/SearchIcon";
-import { Button } from "./ui/Button";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 

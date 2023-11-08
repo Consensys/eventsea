@@ -20,10 +20,12 @@ const GetTickets: React.FC<GetTicketsProps> = ({ event }) => {
   };
 
   const handleDecrement = () => {
-    setNumberOfTickets((prevCount) => prevCount - 1);
+    if (numberOfTickets >= 1) {
+      setNumberOfTickets((prevCount) => prevCount - 1);
+    }
   };
   return (
-    <div className="bg-white p-8 rounded-xl shadow-xl w-3/4 mx-auto">
+    <div className="bg-white p-8 rounded-xl shadow-xl w-3/4 md:sticky md:top-4 h-fit">
       <div className="flex justify-between items-center mb-4">
         <span className="text-gray-600">Ticket Price</span>
         <span>{ticketPrice}ETH</span>
@@ -33,8 +35,8 @@ const GetTickets: React.FC<GetTicketsProps> = ({ event }) => {
         <div className="flex">
           <button
             onClick={handleDecrement}
-            className="bg-gray-200 py-1 px-4 rounded-xl focus:outline-none"
-            disabled={numberOfTickets <= 1}
+            className={`${numberOfTickets < 1 && "cursor-not-allowed opacity-30"} bg-gray-200 py-1 px-4 rounded-xl focus:outline-none`}
+            disabled={numberOfTickets < 1}
           >
             -
           </button>
