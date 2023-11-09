@@ -1,7 +1,8 @@
 import { ethers } from "ethers";
-import { abi } from "@blockchain/artifacts/contracts/Ticket.sol/Ticket.json";
+import contract from "@blockchain/artifacts/contracts/Ticket.sol/Ticket.json";
 import { Ticket } from "@blockchain/typechain-types/contracts/Ticket";
 import { ContractPermission } from "@/types";
+import { getNetworkRPC } from "./utils";
 
 type Args = {
   address: string;
@@ -9,10 +10,13 @@ type Args = {
 };
 
 export const getTicketContract = async ({ address, permission }: Args) => {
+  const network = process.env.NETWORK || "localhost";
+  const rpcUrl = getNetworkRPC(network);
+
   const provider =
     typeof window !== "undefined" && typeof window.ethereum !== "undefined"
       ? new ethers.BrowserProvider(window.ethereum!)
-      : new ethers.JsonRpcProvider("http://127.0.0.1:8545/");
+      : new ethers.JsonRpcProvider(rpcUrl);
 
   const signerOrProvider =
     permission === ContractPermission.READ
@@ -21,7 +25,7 @@ export const getTicketContract = async ({ address, permission }: Args) => {
 
   return new ethers.Contract(
     address,
-    abi,
+    contract.abi,
     signerOrProvider
   ) as unknown as Ticket;
 };

@@ -1,7 +1,8 @@
 import { ethers } from "ethers";
-import { abi } from "@blockchain/artifacts/contracts/Event.sol/Event.json";
+import contract from "@blockchain/artifacts/contracts/Event.sol/Event.json";
 import { Event } from "@blockchain/typechain-types/contracts/Event";
 import { ContractPermission } from "@/types";
+import { getNetworkRPC } from "./utils";
 
 
 type Args = {
@@ -10,10 +11,13 @@ type Args = {
 };
 
 export const getEventContract = async ({ address, permission }: Args) => {
+  const network = process.env.NETWORK || "localhost";
+  const rpcUrl = getNetworkRPC(network);
+  
   const provider =
     typeof window !== "undefined" && typeof window.ethereum !== "undefined"
       ? new ethers.BrowserProvider(window.ethereum!)
-      : new ethers.JsonRpcProvider("http://127.0.0.1:8545/");
+      : new ethers.JsonRpcProvider(rpcUrl);
 
   const signerOrProvider =
     permission === ContractPermission.READ
@@ -22,7 +26,7 @@ export const getEventContract = async ({ address, permission }: Args) => {
 
   return new ethers.Contract(
     address,
-    abi,
+    contract.abi,
     signerOrProvider
   ) as unknown as Event;
 };

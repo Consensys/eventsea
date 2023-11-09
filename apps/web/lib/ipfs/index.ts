@@ -34,9 +34,9 @@ export const addImg = async (image: string) => {
         Authorization:
           "Basic " +
           Buffer.from(
-            process.env["INFURA_IPFS_KEY"] +
+            process.env["INFURA_API_KEY"] +
               ":" +
-              process.env["INFURA_IPFS_SECRET"]
+              process.env["INFURA_API_SECRET"]
           ).toString("base64"),
       },
       body: formData,
@@ -68,9 +68,9 @@ export const addTokenMetadata = async (metadata: Metadata) => {
         Authorization:
           "Basic " +
           Buffer.from(
-            process.env["INFURA_IPFS_KEY"] +
+            process.env["INFURA_API_KEY"] +
               ":" +
-              process.env["INFURA_IPFS_SECRET"]
+              process.env["INFURA_API_SECRET"]
           ).toString("base64"),
       },
       body: formData,
@@ -156,7 +156,7 @@ export const cat = async (hash: string) => {
         Authorization:
           "Basic " +
           Buffer.from(
-            process.env.INFURA_IPFS_KEY + ":" + process.env.INFURA_IPFS_SECRET
+            process.env.INFURA_API_KEY + ":" + process.env.INFURA_API_SECRET
           ).toString("base64"),
       },
     }

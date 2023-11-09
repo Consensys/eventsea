@@ -1,12 +1,12 @@
 {
-  "name": "@consensys/eventsea",
+  "name": "blockchain",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "compile": "hardhat compile",
     "dev": "hardhat node",
-    "migrate:local": "hardhat run --network localhost scripts/deploy.ts",
-    "migrate:linea-testnet": "hardhat run --network linea_testnet scripts/deploy.ts"
+    "compile": "hardhat compile",
+    "deploy:test": "npm run compile && hardhat run scripts/deploy.ts --network linea-testnet ",
+    "deploy:local": "npm run compile && hardhat  run scripts/deploy.ts --network localhost"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.4",

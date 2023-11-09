@@ -37,9 +37,7 @@ import {
 } from "@/components/ui/select";
 import { useDropzone } from "react-dropzone";
 import ImagePreview from "./image-preview";
-import {
-  getEventFactoryContract,
-} from "@/lib/getEventFactoryContract";
+import { getEventFactoryContract } from "@/lib/getEventFactoryContract";
 import { add } from "@/lib/ipfs";
 
 const NUM_OF_STEPS = 3;
@@ -295,7 +293,9 @@ const CreateEventForm = () => {
                   placeholder="Enter a number"
                   type="number"
                   {...field}
-                  onChange={(e) => field.onChange(e.target.value && parseInt(e.target.value))}
+                  onChange={(e) =>
+                    field.onChange(e.target.value && parseInt(e.target.value))
+                  }
                 />
               </FormControl>
 
@@ -317,7 +317,9 @@ const CreateEventForm = () => {
                     type="number"
                     className="border-0"
                     value={value}
-                    onChange={(e) => onChange(e.target.value && parseFloat(e.target.value))}
+                    onChange={(e) =>
+                      onChange(e.target.value && parseFloat(e.target.value))
+                    }
                   />
                   <p className="p-2 text-muted-foreground">
                     {EventSea.Currency.ETH}
