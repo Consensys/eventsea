@@ -39,6 +39,7 @@ import { useDropzone } from "react-dropzone";
 import ImagePreview from "./image-preview";
 import { getEventFactoryContract } from "@/lib/getEventFactoryContract";
 import { add } from "@/lib/ipfs";
+import {  parseEther } from "ethers";
 
 const NUM_OF_STEPS = 3;
 
@@ -150,7 +151,7 @@ const CreateEventForm = () => {
       type,
       imageHash || "",
       Math.floor(dateTime.getTime() / 1000),
-      BigInt(ticketPrice.price),
+      parseEther(ticketPrice.price.toString()),
       BigInt(amountOfTickets)
     );
 
