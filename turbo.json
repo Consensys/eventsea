@@ -10,6 +10,7 @@
         "INFURA_API_KEY",
         "INFURA_API_SECRET"
       ],
+      "dependsOn": ["^build","deploy:test"],
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
