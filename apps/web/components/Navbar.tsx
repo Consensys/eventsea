@@ -1,7 +1,5 @@
 "use client";
 
-// Navbar.tsx
-
 import Link from "next/link";
 import EventSeaLogo from "../public/icons/EventSeaLogo";
 import WalletIcon from "../public/icons/WalletIcon";
@@ -45,11 +43,11 @@ export const ConnectWalletButton = () => {
           <PopoverTrigger>
             <Button variant="primary">{formatAddress(account)}</Button>
           </PopoverTrigger>
-          <PopoverContent className="mt-2 w-44 bg-white border rounded-md shadow-lg right-0 z-10 top-10">
-            <button className="block w-full pl-2 pr-4 py-2 text-left hover:bg-gray-200">
+          <PopoverContent className="right-0 z-10 mt-2 bg-white border rounded-md shadow-lg w-44 top-10">
+            <button className="block w-full py-2 pl-2 pr-4 text-left hover:bg-gray-200">
               My Events
             </button>
-            <button className="block w-full pl-2 pr-4 py-2 text-left hover:bg-gray-200">
+            <button className="block w-full py-2 pl-2 pr-4 text-left hover:bg-gray-200">
               Wallet Details
             </button>
             <button
@@ -62,7 +60,7 @@ export const ConnectWalletButton = () => {
         </Popover>
       ) : (
         <Button variant="primary" disabled={connecting} onClick={connect}>
-          <WalletIcon className="mr-2 h-4 w-4" /> Login
+          <WalletIcon className="w-4 h-4 mr-2" /> Connect MetaMask
         </Button>
       )}
     </div>
@@ -91,8 +89,10 @@ export const NavBar = () => {
           <span className="text-[#4C6D07]">Sea</span>
         </span>
       </Link>
-      <div className="flex gap-4 px-6">
+      <div className="flex items-center gap-4 px-6">
         <SearchBar />
+        <CreateEvent />
+
         <MetaMaskProvider debug={false} sdkOptions={sdkOptions}>
           <ConnectWalletButton />
         </MetaMaskProvider>
