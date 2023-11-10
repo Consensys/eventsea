@@ -5,6 +5,8 @@ import {
 } from "@/lib/getEventFactoryContract";
 import { ContractPermission, EventSea } from "@/types";
 
+export const revalidate = 0;
+
 export default async function Page(): Promise<JSX.Element> {
   const eventsFactory = await getEventFactoryContract({
     permission: ContractPermission.READ,
