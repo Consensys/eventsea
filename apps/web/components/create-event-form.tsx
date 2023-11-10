@@ -39,7 +39,6 @@ import { useDropzone } from "react-dropzone";
 import ImagePreview from "./image-preview";
 import { getEventFactoryContract } from "@/lib/getEventFactoryContract";
 import { add } from "@/lib/ipfs";
-import {  parseEther } from "ethers";
 
 const NUM_OF_STEPS = 3;
 
@@ -144,21 +143,25 @@ const CreateEventForm = () => {
       imageHash = await add({ file: image });
     }
 
-    const resp = await eventFactory.createEvent(
-      title,
-      description,
-      location,
-      type,
-      imageHash || "",
-      Math.floor(dateTime.getTime() / 1000),
-      parseEther(ticketPrice.price.toString()),
-      BigInt(amountOfTickets)
-    );
+    try {
+      const resp = await eventFactory.createEvent(
+        title,
+        description,
+        location,
+        type,
+        imageHash || "",
+        Math.floor(dateTime.getTime() / 1000),
+        BigInt(ticketPrice.price),
+        BigInt(amountOfTickets)
+      );
 
-    await resp.wait();
-    form.reset();
-    router.refresh();
-    setOpen((open) => !open);
+      await resp.wait();
+      form.reset();
+      router.refresh();
+      setOpen((open) => !open);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const Step1 = (

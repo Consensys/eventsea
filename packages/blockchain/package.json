@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "hardhat node",
-    "build": "hardhat compile",
-    "deploy:test": "npm run compile && hardhat run --network linea-testnet scripts/deploy.ts ",
-    "deploy:local": "npm run compile && hardhat  run scripts/deploy.ts --network localhost"
+    "compile": "hardhat compile",
+    "deploy:test": "hardhat run --network linea-testnet scripts/deploy.ts ",
+    "deploy:local": "hardhat run --network localhost scripts/deploy.ts "
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.4",

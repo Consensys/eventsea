@@ -12,7 +12,7 @@
         "NETWORK",
         "LINEA_TEST_RPC_ENDPOINT"
       ],
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "compile"],
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
@@ -24,6 +24,9 @@
         "INFURA_API_KEY",
         "INFURA_API_SECRET"
       ]
+    },
+    "compile": {
+      "cache": false
     },
     "deploy:test": { 
       "cache": false
