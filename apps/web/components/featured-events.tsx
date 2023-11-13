@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { format } from "date-fns";
-import { events } from "@/mock-data";
 import { EventSea } from "@/types";
 import Link from "next/link";
 
@@ -8,17 +7,15 @@ export const metadata = {
   title: "Blog",
 };
 
-export default async function FeaturedEvents() {
+type FeaturedEventsProps = {
+  events: EventSea.Event[];
+};
+
+export default async function FeaturedEvents({ events }: FeaturedEventsProps) {
   const formatDate = (timestamp: number) =>
     format(new Date(timestamp * 1000), "MMM. d");
 
-  const formatEventDate = (dateTime: EventSea.DateTime) => {
-    if (typeof dateTime === "number") {
-      return formatDate(dateTime);
-    } else {
-      return `${formatDate(dateTime.start)} - ${formatDate(dateTime.end)}`;
-    }
-  };
+  const formatEventDate = (dateTime: number) => formatDate(dateTime);
 
   return (
     <div className="container max-w-6xl py-6 lg:py-10">
@@ -33,7 +30,11 @@ export default async function FeaturedEvents() {
           >
             <div className="relative h-full overflow-hidden transition-transform duration-300 ease-in-out origin-top rounded-lg group-hover:scale-y-95 group-hover:scale-x-105">
               <Image
-                src={event?.images?.[0] || "/public/images/default.png"}
+                src={
+                  event.image
+                    ? `https://eventsea.infura-ipfs.io/ipfs/${event.image}`
+                    : "/public/images/default.png"
+                }
                 alt={event.title}
                 objectFit="cover"
                 fill={true}
@@ -58,7 +59,9 @@ export default async function FeaturedEvents() {
             <div className="p-4 absolute bottom-0 w-full bg-white left-0 space-y-1 border transition-transform ease-linear duration-300 group-hover:translate-x-4 group-hover:translate-y-4 border-[#E4E4E7] rounded-lg font-semibold h-1/3">
               <h2 className="text-sm text-[#09090B] ">{event.title}</h2>
 
-              <p className="text-xs text-[#52525B]">{event.location.address}</p>
+              <p className="text-xs text-[#52525B]">
+                {event.location?.address}
+              </p>
               <p className="text-xs text-[#52525B]">
                 {formatEventDate(event.dateTime)}
               </p>

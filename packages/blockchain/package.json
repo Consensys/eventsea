@@ -1,20 +1,23 @@
 {
-  "name": "@consensys/eventsea",
+  "name": "blockchain",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "compile": "hardhat compile",
     "dev": "hardhat node",
-    "migrate:local": "hardhat run --network localhost scripts/deploy.ts"
+    "compile": "hardhat compile",
+    "deploy:test": "hardhat run --network linea-testnet scripts/deploy.ts ",
+    "deploy:local": "hardhat run --network localhost scripts/deploy.ts "
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.4",
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "@typechain/ethers-v6": "^0.4.0",
+    "chai": "^4.3.10",
     "dotenv": "^16.0.3",
     "erc721a": "^4.2.3",
-    "ethers": "^6.1.0",
+    "ethers": "^6.8.1",
     "hardhat": "^2.18.3",
+    "ts-node": "^10.9.1",
     "typechain": "^8.3.1"
   },
   "dependencies": {

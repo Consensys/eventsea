@@ -31,8 +31,10 @@ export const NavBar = () => {
           <span className="text-[#4C6D07]">Sea</span>
         </span>
       </Link>
-      <div className="flex gap-4 px-6">
+      <div className="flex items-center gap-4 px-6">
         <SearchBar />
+        <CreateEvent />
+
         <MetaMaskProvider debug={false} sdkOptions={sdkOptions}>
           <ConnectWalletButton setShowModal={setShowModal} />
           <ConnectionModal open={showModal} setOpen={setShowModal} />
