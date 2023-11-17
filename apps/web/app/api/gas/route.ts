@@ -32,6 +32,6 @@ export async function GET(request: Request) {
   return NextResponse.json({
     estimatedBaseFee: gasPricesData.estimatedBaseFee,
     baseFeeTrend: gasPricesData.baseFeeTrend,
-    baseFeePercentile: baseFeePercentileData.percentile,
+    baseFeePercentile: baseFeePercentileData.baseFeePercentile,
   });
 }
