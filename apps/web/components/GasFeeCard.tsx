@@ -31,25 +31,25 @@ const formatGweiValues = (value: string) => {
 export function GasFeeCard() {
   const { chainId } = useSDK();
 
-  const Auth = Buffer.from(
-    process.env.INFURA_API_KEY + ":" + process.env.INFURA_API_SECRET
-  ).toString("base64");
-
   const [countdown, setCountdown] = useState(REFETCH_INTERVAL);
-  const [previousChainId, setPreviousChainId] = useState(chainId);
+  const [currentChainId, setCurrentChainId] = useState(chainId);
 
   useEffect(() => {
-    if (countdown <= NETWORK_LATENCY && chainId === previousChainId) {
-      mutate("gas/suggestedGasFees");
-      mutate("gas/baseFeePercentile");
+    if (chainId !== currentChainId) {
+      setCurrentChainId(chainId);
+      mutate("gas-data");
+      if (countdown < NETWORK_LATENCY) {
+        setCountdown(REFETCH_INTERVAL + NETWORK_LATENCY);
+      }
+      setCountdown(REFETCH_INTERVAL);
     }
-  }, [countdown, chainId, previousChainId, mutate]);
+  }, [countdown, chainId, currentChainId, mutate]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCountdown((oldCountdown) => {
-        if (chainId !== previousChainId || oldCountdown <= 0) {
-          setPreviousChainId(chainId);
+        if (oldCountdown <= 0) {
+          mutate("gas-data");
           return REFETCH_INTERVAL;
         } else {
           return oldCountdown - STEP_INTERVAL;
@@ -58,42 +58,29 @@ export function GasFeeCard() {
     }, STEP_INTERVAL);
 
     return () => clearInterval(interval);
-  }, [chainId, previousChainId]);
+  }, [chainId]);
 
-  const fetcher = (endpoint: string) =>
-    fetch(
-      `https://gas.api.infura.io/networks/${parseInt(
-        chainId || "0xe704"
-      )}/${endpoint}`,
-      {
-        headers: {
-          Authorization: `Basic ${Auth}`,
-        },
-      }
-    ).then((res) => res.json());
+  const fetcher = () =>
+    fetch(`/api/gas?&chainId=${parseInt(chainId || "0xe704")}`).then((res) =>
+      res.json()
+    );
 
   const {
-    data: gasPrices,
-    error: gasPricesError,
-    isLoading: gasPricesLoading,
-  } = useSWR("gas/suggestedGasFees", () => fetcher("suggestedGasFees"));
+    data: gasData,
+    error: gasDataError,
+    isLoading: gasDataLoading,
+  } = useSWR("gas-data", fetcher);
 
-  const {
-    data: baseFeePercentile,
-    error: percentileError,
-    isLoading: percentileLoading,
-  } = useSWR("gas/baseFeePercentile", () => fetcher("baseFeePercentile"));
-
-  if (gasPricesLoading || percentileLoading) {
+  if (gasDataLoading) {
     return <p>loading</p>;
   }
 
-  if (gasPricesError || percentileError) {
+  if (gasDataError) {
     return <p className="text-red-500">error</p>;
   }
 
-  const trendingUp = gasPrices?.baseFeeTrend === "up";
-  const trendingDown = gasPrices?.baseFeeTrend === "down";
+  const trendingUp = gasData?.baseFeeTrend === "up";
+  const trendingDown = gasData?.baseFeeTrend === "down";
 
   return (
     <HoverCard>
@@ -129,7 +116,7 @@ export function GasFeeCard() {
               </CircularProgressbarWithChildren>
             </div>
             <p>
-              ~{formatGweiValues(gasPrices?.estimatedBaseFee)}
+              ~{formatGweiValues(gasData?.estimatedBaseFee)}
               Gwei
             </p>
             <InfoIcon size={14} />
@@ -144,7 +131,7 @@ export function GasFeeCard() {
           <p>
             50% of the historical base fees are less then or equal to{" "}
             <strong>
-              ~{formatGweiValues(baseFeePercentile?.baseFeePercentile)} Gwei
+              ~{formatGweiValues(gasData?.baseFeePercentile)} Gwei
             </strong>
           </p>
         </div>
