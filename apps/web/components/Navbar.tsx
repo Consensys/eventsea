@@ -7,13 +7,14 @@ import CreateEvent from "@/components/create-event-form";
 import { Button } from "./ui/Button";
 import { SearchBar } from "./SearchBar";
 import { useState } from "react";
-import { useSDK, MetaMaskProvider } from "@metamask/sdk-react";
 import { formatAddress } from "./../lib/utils";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import MetaMaskProvider from "@/providers/MetamaskProvider";
+import { useSDK } from "@metamask/sdk-react";
 
 export const ConnectWalletButton = () => {
   const [account, setAccount] = useState<string | undefined>();
@@ -68,18 +69,6 @@ export const ConnectWalletButton = () => {
 };
 
 export const NavBar = () => {
-  const host =
-    typeof window !== "undefined" ? window.location.host : "defaultHost";
-
-  const sdkOptions = {
-    logging: { developerMode: false },
-    checkInstallationImmediately: false,
-    dappMetadata: {
-      name: "EventSea",
-      url: host, // using the host constant defined above
-    },
-  };
-
   return (
     <nav className="flex items-center justify-between max-w-screen-xl px-6 mx-auto bg-white border py-7 rounded-xl">
       <Link href="/" className="flex gap-1 px-6">
@@ -93,7 +82,7 @@ export const NavBar = () => {
         <SearchBar />
         <CreateEvent />
 
-        <MetaMaskProvider debug={false} sdkOptions={sdkOptions}>
+        <MetaMaskProvider>
           <ConnectWalletButton />
         </MetaMaskProvider>
       </div>
