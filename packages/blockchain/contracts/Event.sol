@@ -31,7 +31,6 @@ contract Event {
         string memory _location,
         string memory _eventType,
         string memory _image,
-        string memory symbol,
         uint _date,
         uint ticketPrice,
         uint amountOfTickets
@@ -46,8 +45,6 @@ contract Event {
 
         Ticket ticketContract = new Ticket(
             title,
-            symbol,
-            "ipfs/url",
             amountOfTickets,
             ticketPrice
         );

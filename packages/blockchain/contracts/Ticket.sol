@@ -12,7 +12,6 @@ contract Ticket is ERC721URIStorage, Ownable(tx.origin), Pausable {
     uint256 public constant MAX_PER_MINT = 5;
     address public eventOwner;
     uint256 public tokenId = 0;
-    string public _contractBaseURI;
     uint public _ticketPrice;
 
     event PermanentURI(string _value, uint256 indexed _id, address indexed _to);
@@ -20,14 +19,11 @@ contract Ticket is ERC721URIStorage, Ownable(tx.origin), Pausable {
 
     constructor(
         string memory name,
-        string memory symbol,
-        string memory contractBaseURI,
         uint256 maxSupply,
         uint ticketPrice
-    ) ERC721(name, symbol) {
+    ) ERC721(name, "ECT") {
         MAX_SUPPLY = maxSupply;
         eventOwner = tx.origin;
-        _contractBaseURI = contractBaseURI;
         _ticketPrice = ticketPrice;
     }
 
@@ -85,10 +81,6 @@ contract Ticket is ERC721URIStorage, Ownable(tx.origin), Pausable {
         uint256 balance = address(this).balance;
 
         payable(msg.sender).transfer(balance);
-    }
-
-    function _baseURI() internal view override returns (string memory) {
-        return _contractBaseURI;
     }
 
     function tokenMeta(uint256 _tokenId) public view returns (string memory) {

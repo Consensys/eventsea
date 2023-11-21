@@ -1,11 +1,11 @@
 "use client";
-
 import { useState } from "react";
 import { z } from "zod";
 import { CloudArrowUpIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "./ui/Button";
 import { Calendar } from "@/components/ui/calendar";
-import { EventSea } from "@/types";
+import { ContractPermission, EventSea } from "@/types";
 import {
   Form,
   FormControl,
@@ -37,12 +37,16 @@ import {
 } from "@/components/ui/select";
 import { useDropzone } from "react-dropzone";
 import ImagePreview from "./image-preview";
+import { getEventFactoryContract } from "@/lib/getEventFactoryContract";
+import { add } from "@/lib/ipfs";
 
 const NUM_OF_STEPS = 3;
 
-export default function CreateEventForm() {
-  const [step, setStep] = useState(3);
+const CreateEventForm = () => {
+  const [step, setStep] = useState(1);
   const [open, setOpen] = useState(false);
+
+  const router = useRouter();
 
   const formSchema = z.object({
     title: z.string().nonempty("Title is required"),
@@ -54,17 +58,13 @@ export default function CreateEventForm() {
         return true;
       }
       return false;
-    }),
-    // @TODO add number validations for amountOfTickets and price
-    amountOfTickets: z.string(),
+    }, "Image is required"),
+    amountOfTickets: z.number().positive("Amount of tickets is required"),
     ticketPrice: z.object({
-      price: z.string(),
+      price: z.number().positive("Price is required"),
       currency: z.nativeEnum(EventSea.Currency),
     }),
-    dateTime: z.object({
-      from: z.date().optional(),
-      to: z.date().optional(),
-    }),
+    dateTime: z.date(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -74,15 +74,13 @@ export default function CreateEventForm() {
       location: "",
       description: "",
       type: EventSea.EventType.Conference,
-      image: null,
-      amountOfTickets: "",
+      image: undefined,
+      amountOfTickets: undefined,
       ticketPrice: {
         price: undefined,
         currency: EventSea.Currency.ETH,
       },
-      dateTime: {
-        from: new Date(),
-      },
+      dateTime: new Date(),
     },
     mode: "onChange",
   });
@@ -119,251 +117,271 @@ export default function CreateEventForm() {
           "ticketPrice.price",
         ]);
       case 3:
-        return await form.trigger(["dateTime.from", "dateTime.to"]);
+        return await form.trigger(["dateTime"]);
     }
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    form.reset();
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const eventFactory = await getEventFactoryContract({
+      permission: ContractPermission.WRITE,
+    });
+
+    const {
+      title,
+      description,
+      location,
+      type,
+      ticketPrice,
+      amountOfTickets,
+      dateTime,
+      image,
+    } = values;
+
+    let imageHash: string | undefined;
+
+    if (image) {
+      imageHash = await add({ file: image });
+    }
+
+    try {
+      const resp = await eventFactory.createEvent(
+        title,
+        description,
+        location,
+        type,
+        imageHash || "",
+        Math.floor(dateTime.getTime() / 1000),
+        BigInt(ticketPrice.price),
+        BigInt(amountOfTickets)
+      );
+
+      await resp.wait();
+      form.reset();
+      router.refresh();
+      setOpen((open) => !open);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  const getStepContent = (step: number) => {
-    switch (step) {
-      case 1:
-        return (
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Add title here" {...field} />
-                  </FormControl>
+  const Step1 = (
+    <div className="space-y-4">
+      <FormField
+        control={form.control}
+        name="title"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Title</FormLabel>
+            <FormControl>
+              <Input placeholder="Add title here" {...field} />
+            </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Location</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter location" {...field}></Input>
-                  </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="location"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Location</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter location" {...field}></Input>
+            </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Write text here ..." {...field} />
-                  </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="description"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Description</FormLabel>
+            <FormControl>
+              <Textarea placeholder="Write text here ..." {...field} />
+            </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field: { value, onChange } }) => (
-                <FormItem>
-                  <FormLabel>Type</FormLabel>
-                  <FormControl>
-                    <Select value={value} onValueChange={onChange}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.values(EventSea.EventType).map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
+      <FormField
+        control={form.control}
+        name="type"
+        render={({ field: { value, onChange } }) => (
+          <FormItem>
+            <FormLabel>Type</FormLabel>
+            <FormControl>
+              <Select value={value} onValueChange={onChange}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.values(EventSea.EventType).map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        );
-      case 2:
-        return (
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    <div
-                      {...getRootProps({ className: "dropzone" })}
-                      className="flex flex-col text-muted-foreground justify-center items-center h-[144px] mt-1 text-sm border-2 border-dashed rounded-md leading- bg-muted"
-                    >
-                      <input {...getInputProps()} />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
 
-                      <CloudArrowUpIcon
-                        className="w-8 mx-auto text-gray-500"
-                        aria-hidden="true"
-                      />
+  const Step2 = (
+    <div className="space-y-4">
+      <FormField
+        control={form.control}
+        name="image"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Image</FormLabel>
+            <FormControl>
+              <div
+                {...getRootProps({ className: "dropzone" })}
+                className="flex flex-col text-muted-foreground justify-center items-center h-[144px] mt-1 text-sm border-2 border-dashed rounded-md leading- bg-muted"
+              >
+                <input {...getInputProps()} />
 
-                      <span className="font-semibold ">
-                        <button
-                          className="mr-1"
-                          type="button"
-                          onClick={openFileDialog}
-                        >
-                          Click to upload
-                        </button>
-                        <span className="font-normal"> or </span>
-                        <span> drag and drop</span>
-                      </span>
+                <CloudArrowUpIcon
+                  className="w-8 mx-auto text-gray-500"
+                  aria-hidden="true"
+                />
 
-                      <p className="mt-2 text-xs">
-                        (recommended size 512x512px)
-                      </p>
-                    </div>
-                  </FormControl>
+                <span className="font-semibold ">
+                  <button
+                    className="mr-1"
+                    type="button"
+                    onClick={openFileDialog}
+                  >
+                    Click to upload
+                  </button>
+                  <span className="font-normal"> or </span>
+                  <span> drag and drop</span>
+                </span>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <p className="mt-2 text-xs">(recommended size 512x512px)</p>
+              </div>
+            </FormControl>
 
-            {watchImage && (
-              <ImagePreview
-                image={watchImage}
-                handleOnRemove={() => form.resetField("image")}
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {watchImage && (
+        <ImagePreview
+          image={watchImage}
+          handleOnRemove={() => form.resetField("image")}
+        />
+      )}
+
+      <div className="grid grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="amountOfTickets"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Amount of tickets</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Enter a number"
+                  type="number"
+                  {...field}
+                  onChange={(e) =>
+                    field.onChange(e.target.value && parseInt(e.target.value))
+                  }
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="ticketPrice.price"
+          render={({ field: { value, onChange } }) => (
+            <FormItem>
+              <FormLabel>Ticket price</FormLabel>
+              <FormControl>
+                <div className="flex items-center space-x-1 border rounded-md bg-muted">
+                  <Input
+                    placeholder="Enter a number"
+                    type="number"
+                    className="border-0"
+                    value={value}
+                    onChange={(e) =>
+                      onChange(e.target.value && parseFloat(e.target.value))
+                    }
+                  />
+                  <p className="p-2 text-muted-foreground">
+                    {EventSea.Currency.ETH}
+                  </p>
+                  {/* // Hiding currency picker for now, until we support multiple currencies */}
+                  {/* <Select
+                    value={value.currency}
+                    onValueChange={(currency) =>
+                      onChange({ ...value, currency })
+                    }
+                  >
+                    <SelectTrigger className="w-1/3 border-0 border-l-2 rounded-none">
+                      <SelectValue placeholder="Theme" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(EventSea.Currency).map((currency) => (
+                        <SelectItem key={currency} value={currency}>
+                          {currency}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select> */}
+                </div>
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+    </div>
+  );
+
+  const Step3 = (
+    <div className="space-y-4">
+      <FormField
+        control={form.control}
+        name="dateTime"
+        render={({ field: { value, onChange } }) => (
+          <FormItem>
+            <FormControl>
+              <Calendar
+                initialFocus
+                mode="single"
+                selected={value}
+                disabled={(date) => date < new Date()}
+                onSelect={onChange}
+                numberOfMonths={2}
+                className="p-0"
               />
-            )}
+            </FormControl>
 
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="amountOfTickets"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Amount of tickets</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Enter a number"
-                        type="number"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="ticketPrice"
-                render={({ field: { value, onChange } }) => (
-                  <FormItem>
-                    <FormLabel>Ticket price</FormLabel>
-                    <FormControl>
-                      <div className="flex space-x-1 border rounded-md bg-muted">
-                        <Input
-                          placeholder="Enter a number"
-                          type="number"
-                          className="border-0"
-                          value={value.price}
-                          onChange={(e) =>
-                            onChange({
-                              ...value,
-                              price: e.target.value,
-                            })
-                          }
-                        />
-                        <Select
-                          value={value.currency}
-                          onValueChange={(currency) =>
-                            onChange({ ...value, currency })
-                          }
-                        >
-                          <SelectTrigger className="w-1/3 border-0 border-l-2 rounded-none">
-                            <SelectValue placeholder="Theme" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.values(EventSea.Currency).map(
-                              (currency) => (
-                                <SelectItem key={currency} value={currency}>
-                                  {currency}
-                                </SelectItem>
-                              )
-                            )}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-        );
-      case 3:
-        return (
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="dateTime"
-              render={({
-                field: {
-                  value: { from, to },
-                  onChange,
-                },
-              }) => (
-                <FormItem>
-                  <FormControl>
-                    <Calendar
-                      initialFocus
-                      mode="range"
-                      defaultMonth={from}
-                      selected={{
-                        from,
-                        to,
-                      }}
-                      onSelect={(range) => {
-                        onChange({
-                          from: range?.from,
-                          to: range?.to,
-                        });
-                      }}
-                      numberOfMonths={2}
-                      className="p-0"
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        );
-    }
-  };
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
 
   return (
     <Dialog
@@ -375,7 +393,9 @@ export default function CreateEventForm() {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="outline">Create event</Button>
+        <Button variant="outline" type="button">
+          Create event
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
         <Form {...form}>
@@ -385,7 +405,9 @@ export default function CreateEventForm() {
               <DialogDescription>Basic Information</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 p-4 sm:h-[450px] overflow-y-auto ">
-              {getStepContent(step)}
+              {step === 1 && Step1}
+              {step === 2 && Step2}
+              {step === 3 && Step3}
             </div>
             <DialogFooter>
               <Button
@@ -422,4 +444,6 @@ export default function CreateEventForm() {
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export default CreateEventForm;
