@@ -43,6 +43,8 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
 
   const ticketPrice = await ticketContract._ticketPrice();
 
+  let tokenID = await ticketContract.getTokenID();
+
   const formattedDate = format(new Date(Number(date) * 1000), "MMM. d");
 
   return (
@@ -60,7 +62,12 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
 
       <div className="relative w-full h-[450px] rounded-md mb-4 overflow-hidden">
         {image && (
-          <Image src={`https://eventsea.infura-ipfs.io/ipfs/${image}`} alt={title} layout="fill" objectFit="cover" />
+          <Image
+            src={`https://eventsea.infura-ipfs.io/ipfs/${image}`}
+            alt={title}
+            layout="fill"
+            objectFit="cover"
+          />
         )}
       </div>
 
@@ -68,7 +75,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold mb-2">{title}</h1>
           <span className="text-sm text-gray-500 bg-green-200 p-1 rounded-md inline-block mb-4 w-fit">
-            {tags.join(", ")}
+            {eventType}
           </span>
 
           <div className="my-4">
@@ -134,7 +141,12 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
         </div>
 
         <div className="flex w-full justify-center md:justify-end">
-          <GetTickets event={event} />
+          <GetTickets
+            ticketPrice={ticketPrice}
+            ticketNFT={ticketNFT}
+            eventTitle={title}
+            eventDate={date}
+          />
         </div>
       </div>
     </div>
