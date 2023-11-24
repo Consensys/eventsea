@@ -1,63 +1,60 @@
-"use client";
-
 // GetTickets.tsx
-import { useState } from "react";
 import { Button } from "./ui/Button";
-import { EventSea } from "@/types";
+import { addImg, addTokenMetadata } from "@/lib/ipfs";
+import { getTicketContract } from "@/lib/getTicketContract";
+import { ContractPermission } from "@/types";
+import { AmountOfTicketsComponent } from "./AmountOfTicketsComponent";
 
 interface GetTicketsProps {
-  ticketPrice: number;
+  ticketPrice: bigint;
+  ticketNFT: string;
+  eventTitle: string;
+  eventDate: bigint;
 }
 
-const GetTickets: React.FC<GetTicketsProps> = ({ ticketPrice }) => {
-  const [numberOfTickets, setNumberOfTickets] = useState(0);
+const GetTickets: React.FC<GetTicketsProps> = async ({
+  ticketPrice,
+  ticketNFT,
+  eventTitle,
+  eventDate,
+}) => {
+  const nftContract = await getTicketContract({
+    address: ticketNFT,
+    permission: ContractPermission.WRITE,
+  });
 
-  const handleIncrement = () => {
-    setNumberOfTickets((prevCount) => prevCount + 1);
+  let tokenID = Number(await nftContract.getTokenID());
+
+  console.log(tokenID);
+  
+  const svgIPFS = await addImg(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+        <text x="150" y="125" font-size="40" fill="black">
+          ${eventTitle}
+        </text>
+        <text x="150" y="170" font-size="20" fill="black">
+          ${eventDate}
+        </text>
+        <text x="150" y="215" font-size="20" fill="black">
+          ${tokenID}
+        </text>
+      </svg>`);
+
+  const tokenMetadata = {
+    name: eventTitle,
+    description: `Ticket for ${eventTitle} on ${eventDate}`,
+    image: `https://ipfs.io/ipfs/${svgIPFS.Hash}`,
+    attributes: [
+      {
+        trait_type: "Ticket ID",
+        value: tokenID,
+      },
+    ],
   };
 
-  const handleDecrement = () => {
-    if (numberOfTickets >= 1) {
-      setNumberOfTickets((prevCount) => prevCount - 1);
-    }
-  };
-  return (
-    <div className="bg-white p-8 rounded-xl shadow-xl full md:w-3/4 md:sticky md:top-4 h-fit">
-      <div className="flex justify-between items-center mb-4">
-        <span className="text-gray-600">Ticket Price</span>
-        <span>{ticketPrice}ETH</span>
-      </div>
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-gray-600">Number of tickets</span>
-        <div className="flex">
-          <button
-            onClick={handleDecrement}
-            className={`${numberOfTickets < 1 && "cursor-not-allowed opacity-30"} bg-gray-200 py-1 px-4 rounded-xl focus:outline-none`}
-            disabled={numberOfTickets < 1}
-          >
-            -
-          </button>
-          <span className="px-4 py-2">{numberOfTickets}</span>
-          <button
-            onClick={handleIncrement}
-            className="px-4 py-1 bg-gray-200 rounded-xl focus:outline-none"
-          >
-            +
-          </button>
-        </div>
-      </div>
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-gray-600">Total</span>
-        <span>{(numberOfTickets * ticketPrice).toFixed(2)}ETH</span>
-      </div>
-      <Button
-        variant="primary"
-        className="w-full text-[#0C200A] p-2 rounded focus:outline-none "
-      >
-        Get tickets
-      </Button>
-    </div>
-  );
+  const metadataIPFS = await addTokenMetadata(tokenMetadata);
+
+  return <AmountOfTicketsComponent ticketPrice={ticketPrice} metadataHash={metadataIPFS.hash} nftAddress={ticketNFT} />;
 };
 
 export default GetTickets;

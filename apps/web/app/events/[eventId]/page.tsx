@@ -142,7 +142,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
 
         <div className="flex w-full justify-center md:justify-end">
           <GetTickets
-            ticketPrice={Number(ticketPrice)}
+            ticketPrice={(ticketPrice)}
             ticketNFT={ticketNFT}
             eventTitle={title}
             eventDate={date}

@@ -1,16 +1,27 @@
 import FeaturedEvents from "@/components/featured-events";
 import { getEventContract } from "@/lib/getEventContract";
-import {
-  getEventFactoryContract,
-} from "@/lib/getEventFactoryContract";
+import { getEventFactoryContract } from "@/lib/getEventFactoryContract";
 import { ContractPermission, EventSea } from "@/types";
 
 export const revalidate = 0;
 
 export default async function Page(): Promise<JSX.Element> {
   const eventsFactory = await getEventFactoryContract({
-    permission: ContractPermission.READ,
+    permission: ContractPermission.WRITE,
   });
+
+  // const dateSample = new Date();
+
+  // await eventsFactory.createEvent(
+  //   "Event 2",
+  //   "Description",
+  //   "Location",
+  //   "Event - Type",
+  //   "",
+  //   Math.floor(dateSample.getTime() / 1000),
+  //   BigInt(121231233),
+  //   BigInt(12123214123)
+  // );
 
   const eventAddresses = await eventsFactory.getEvents();
 
@@ -20,15 +31,16 @@ export default async function Page(): Promise<JSX.Element> {
       permission: ContractPermission.READ,
     });
 
-    const [title, description, owner, location, eventType, image, date] = await Promise.all([
-      eventContact.title(),
-      eventContact.description(),
-      eventContact.owner(),
-      eventContact.location(),
-      eventContact.eventType(),
-      eventContact.image(),
-      eventContact.date(),
-    ]);
+    const [title, description, owner, location, eventType, image, date] =
+      await Promise.all([
+        eventContact.title(),
+        eventContact.description(),
+        eventContact.owner(),
+        eventContact.location(),
+        eventContact.eventType(),
+        eventContact.image(),
+        eventContact.date(),
+      ]);
 
     return {
       id: address,

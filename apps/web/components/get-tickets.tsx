@@ -37,8 +37,6 @@ export const GetTickets = async () => {
       },
     ],
   };
-
-  const metadataHash = await addTokenMetadata(tokenMetadata);
-  console.log(metadataHash)
+  
   return <h1>Get Tickets</h1>;
 };

@@ -42,6 +42,7 @@ export const addImg = async (image: string) => {
       body: formData,
     });
     const json = await res.json();
+    console.log("Image added to IPFS")
     return json;
   } catch (error) {
     console.log(error);
@@ -49,12 +50,12 @@ export const addImg = async (image: string) => {
 };
 
 type Metadata = {
-  name: FormDataEntryValue | null;
+  name: string;
   description: string;
   image: string;
   attributes: {
     trait_type: string;
-    value: FormDataEntryValue | null;
+    value: number;
   }[];
 };
 
@@ -76,6 +77,7 @@ export const addTokenMetadata = async (metadata: Metadata) => {
       body: formData,
     });
     const json = await res.json();
+    console.log("Metadata added to IPFS")
     return json;
   } catch (error) {
     console.log(error);
