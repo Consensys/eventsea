@@ -39,6 +39,8 @@ import { useDropzone } from "react-dropzone";
 import ImagePreview from "./image-preview";
 import { getEventFactoryContract } from "@/lib/getEventFactoryContract";
 import { add } from "@/lib/ipfs";
+import LocationAutoSuggestInput from "./location-autosuggest-input";
+import { getLatLngFromAddress } from "@/lib/utils";
 
 const NUM_OF_STEPS = 3;
 
@@ -147,7 +149,7 @@ const CreateEventForm = () => {
       const resp = await eventFactory.createEvent(
         title,
         description,
-        location,
+        JSON.stringify(await getLatLngFromAddress(location)),
         type,
         imageHash || "",
         Math.floor(dateTime.getTime() / 1000),
@@ -187,9 +189,13 @@ const CreateEventForm = () => {
           <FormItem>
             <FormLabel>Location</FormLabel>
             <FormControl>
-              <Input placeholder="Enter location" {...field}></Input>
+              <div className="w-full">
+                <LocationAutoSuggestInput
+                  fieldValue={field.value}
+                  onSelect={(value) => field.onChange(value)}
+                />
+              </div>
             </FormControl>
-
             <FormMessage />
           </FormItem>
         )}

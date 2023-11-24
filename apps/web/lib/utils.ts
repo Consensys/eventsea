@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { getGeocode, getLatLng } from "use-places-autocomplete";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -28,4 +29,9 @@ export const getNetworkRPC = (network: string) => {
     default:
       throw new Error(`Unsupported network: ${network}`);
   }
+};
+
+export const getLatLngFromAddress = async (address: string) => {
+  const data = await getGeocode({ address: address });
+  return getLatLng(data[0]);
 };
