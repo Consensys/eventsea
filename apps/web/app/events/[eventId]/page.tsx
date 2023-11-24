@@ -94,7 +94,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
             </h3>
 
             <EventLocationMap
-              location={JSON.parse('{"lat":6.901672,"lng":79.872709}')}
+              location={JSON.parse(location)}
             />
           </div>
         </div>
