@@ -1,4 +1,5 @@
 import FeaturedEvents from "@/components/featured-events";
+import { getAddressFromCoordinates } from "@/lib/actions";
 import { getEventContract } from "@/lib/getEventContract";
 import {
   getEventFactoryContract,
@@ -38,7 +39,7 @@ export default async function Page(): Promise<JSX.Element> {
         address: owner,
       },
       location: {
-        address: location,
+        address: await getAddressFromCoordinates(JSON.parse(location)),
       },
       eventType,
       image,
