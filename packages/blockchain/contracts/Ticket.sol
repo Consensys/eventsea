@@ -49,14 +49,15 @@ contract Ticket is ERC721URIStorage, Ownable(tx.origin), Pausable {
     function mint(
         uint256 amount,
         string memory _tokenURI
-    ) external payable whenNotPaused canMint(amount) {
-        for (uint256 i = 1; i < amount; i++) {
+    ) external payable whenNotPaused canMint(amount) returns (uint256) {
+        for (uint256 i = 1; i <= amount; i++) {
             tokenId++;
             _safeMint(msg.sender, tokenId);
             _setTokenURI(tokenId, _tokenURI);
             lockMetadata(amount);
             emit TicketMinted(msg.sender, tokenId);
         }
+        return tokenId;
     }
 
     function lockMetadata(uint256 quantity) internal {
@@ -75,6 +76,10 @@ contract Ticket is ERC721URIStorage, Ownable(tx.origin), Pausable {
 
     function contractBalance() public view returns (uint256) {
         return address(this).balance;
+    }
+
+    function getTokenID() public view returns (uint256) {
+        return tokenId;
     }
 
     function withdraw() public onlyOwner {
