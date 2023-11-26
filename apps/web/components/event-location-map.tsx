@@ -1,17 +1,27 @@
 "use client";
 
-import { getAddressFromCoordinates } from "@/lib/actions";
-import LocationIcon from "@/components/icons/LocationIcon";
-import { GoogleMap, Libraries, useLoadScript } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  Libraries,
+  Marker,
+  useLoadScript,
+} from "@react-google-maps/api";
 import { FC, useEffect, useMemo, useState } from "react";
-import { LatLng } from "use-places-autocomplete";
+import { getDetails } from "use-places-autocomplete";
+import LocationIcon from "@/components/icons/LocationIcon";
 
 interface EventLocationMapProps {
-  location: LatLng;
+  location: string;
 }
 
 const EventLocationMap: FC<EventLocationMapProps> = ({ location }) => {
-  const center = useMemo(() => location, []);
+  const [coordinates, setCoordinates] = useState<google.maps.LatLngLiteral>({
+    lat: 0,
+    lng: 0,
+  });
+
+  const [address, setAddress] = useState("");
+
   const libraries: Libraries = useMemo(() => ["places"], []);
 
   const { isLoaded } = useLoadScript({
@@ -19,15 +29,24 @@ const EventLocationMap: FC<EventLocationMapProps> = ({ location }) => {
     libraries,
   });
 
-  const [address, setAddress] = useState<string>("");
-
   useEffect(() => {
     const getAddress = async () => {
-      const address = await getAddressFromCoordinates(location);
-      setAddress(address);
+      if (isLoaded) {
+        const details = (await getDetails({
+          placeId: location,
+          fields: ["name", "geometry.location"],
+        })) as google.maps.places.PlaceResult;
+
+        setCoordinates({
+          lat: details.geometry?.location?.lat() || 0,
+          lng: details.geometry?.location?.lng() || 0,
+        });
+
+        setAddress(details.name || "");
+      }
     };
     getAddress();
-  }, [location]);
+  }, [location, isLoaded]);
 
   const mapOptions = useMemo<google.maps.MapOptions>(
     () => ({
@@ -50,9 +69,11 @@ const EventLocationMap: FC<EventLocationMapProps> = ({ location }) => {
         <GoogleMap
           options={mapOptions}
           zoom={14}
-          center={center}
+          center={coordinates}
           mapContainerClassName="w-full h-full"
-        />
+        >
+          <Marker position={coordinates} />
+        </GoogleMap>
       </div>
     </div>
   );

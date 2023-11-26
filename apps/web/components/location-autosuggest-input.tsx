@@ -15,8 +15,11 @@ import {
 } from "./ui/command";
 
 interface LocationAutoSuggestInputProps {
-  fieldValue: string;
-  onSelect: (location: string) => void;
+  fieldValue: {
+    placeId: string;
+    description: string;
+  };
+  onSelect: (location: { placeId: string; description: string }) => void;
 }
 
 const LocationAutoSuggestInput: FC<LocationAutoSuggestInputProps> = ({
@@ -57,7 +60,7 @@ const LocationAutoSuggestInput: FC<LocationAutoSuggestInputProps> = ({
           aria-expanded={mapOpen}
           className="justify-between w-full"
         >
-          {fieldValue || "Select a location..."}
+          {fieldValue.description || "Select a location..."}
         </Button>
       </PopoverTrigger>
       <PopoverContent side="bottom" align="start" className="w-[400px] p-0">
@@ -77,8 +80,8 @@ const LocationAutoSuggestInput: FC<LocationAutoSuggestInputProps> = ({
                   <CommandItem
                     key={place_id}
                     value={description}
-                    onSelect={(currentValue) => {
-                      onSelect(currentValue);
+                    onSelect={() => {
+                      onSelect({ placeId: place_id, description });
                       clearSuggestions();
                       setMapOpen(false);
                     }}

@@ -30,8 +30,3 @@ export const getNetworkRPC = (network: string) => {
       throw new Error(`Unsupported network: ${network}`);
   }
 };
-
-export const getLatLngFromAddress = async (address: string) => {
-  const data = await getGeocode({ address: address });
-  return getLatLng(data[0]);
-};
