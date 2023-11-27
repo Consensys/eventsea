@@ -43,7 +43,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
 
   const ticketPrice = await ticketContract._ticketPrice();
 
-  let tokenID = await ticketContract.getTokenID();
+  // let tokenID = await ticketContract.getTokenID();
 
   const formattedDate = format(new Date(Number(date) * 1000), "MMM. d");
 
@@ -142,10 +142,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
 
         <div className="flex w-full justify-center md:justify-end">
           <GetTickets
-            ticketPrice={(ticketPrice)}
-            ticketNFT={ticketNFT}
-            eventTitle={title}
-            eventDate={date}
+            ticketPrice={(Number(ticketPrice))}
           />
         </div>
       </div>
