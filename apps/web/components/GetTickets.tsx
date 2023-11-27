@@ -19,7 +19,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({ ticketPrice }) => {
     setNumberOfTickets((prevCount) => prevCount - 1);
   };
   return (
-    <div className="w-3/4 p-8 mx-auto bg-white shadow-xl rounded-xl">
+    <div className="bg-white p-8 rounded-xl shadow-xl full md:w-3/4 md:sticky md:top-4 h-fit">
       <div className="flex items-center justify-between mb-4">
         <span className="text-gray-600">Ticket Price</span>
         <span>{ticketPrice}ETH</span>
