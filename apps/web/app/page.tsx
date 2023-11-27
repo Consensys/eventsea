@@ -7,7 +7,7 @@ export const revalidate = 0;
 
 export default async function Page(): Promise<JSX.Element> {
   const eventsFactory = await getEventFactoryContract({
-    permission: ContractPermission.WRITE,
+    permission: ContractPermission.READ,
   });
 
   // const dateSample = new Date();
