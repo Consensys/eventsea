@@ -1,6 +1,5 @@
 "use client";
 
-// GetTickets.tsx
 import { useState } from "react";
 import { Button } from "./ui/Button";
 import { getTicketContract } from "@/lib/getTicketContract";

@@ -73,6 +73,20 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        bounceUp: "bounceUp 2s infinite",
+        bounceDown: "bounceDown 2s infinite",
+      },
+      keyframes: {
+        bounceUp: {
+          "0%, 20%, 50%, 80%, 100%": { transform: "translateY(0)" },
+          "40%": { transform: "translateY(-5px)" },
+          "60%": { transform: "translateY(-2px)" },
+        },
+        bounceDown: {
+          "0%, 20%, 50%, 80%, 100%": { transform: "translateY(0)" },
+          "40%": { transform: "translateY(5px)" },
+          "60%": { transform: "translateY(2px)" },
+        },
       },
     },
   },
