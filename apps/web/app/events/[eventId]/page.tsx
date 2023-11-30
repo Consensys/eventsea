@@ -6,7 +6,7 @@ import { getEventContract } from "@/lib/getEventContract";
 import { format } from "date-fns";
 import { getTicketContract } from "@/lib/getTicketContract";
 import { ContractPermission } from "@/types";
-import EventLocationMap from "@/components/event-location-map";
+import { addImg, addTokenMetadata } from "@/lib/ipfs";
 
 type PageProps = {
   params: {
@@ -37,9 +37,37 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
   const [title, description, location, eventType, image, date, ticketNFT] =
     eventData;
 
+  const svgIPFS = await addImg(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+        <text x="150" y="125" font-size="40" fill="black">
+          ${title}
+        </text>
+        <text x="150" y="170" font-size="20" fill="black">
+          ${date}
+        </text>
+        <text x="150" y="215" font-size="20" fill="black">
+          ${location}
+        </text>
+      </svg>
+    `);
+
+  const tokenMetadata = {
+    name: title,
+    description: `Ticket for ${title} on ${Number(date)}`,
+    image: `https://ipfs.io/ipfs/${svgIPFS.Hash}`,
+    attributes: [
+      {
+        trait_type: "Ticket ID",
+        value: 1,
+      },
+    ],
+  };
+
+  const metadataHash = await addTokenMetadata(tokenMetadata);
+
   const ticketContract = await getTicketContract({
     address: ticketNFT,
-    permission: ContractPermission.READ,
+    permission: ContractPermission.WRITE,
   });
 
   const ticketPrice = await ticketContract._ticketPrice();
@@ -60,6 +88,12 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
       </div>
       <div className="relative w-full h-[450px] rounded-md mb-4 overflow-hidden">
         {image && (
+          <Image
+            src={`https://eventsea.infura-ipfs.io/ipfs/${image}`}
+            alt={title}
+            layout="fill"
+            objectFit="cover"
+          />
           <Image
             src={`https://eventsea.infura-ipfs.io/ipfs/${image}`}
             alt={title}
@@ -99,8 +133,12 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
           </div>
         </div>
 
-        <div className="flex justify-center w-full md:justify-end">
-          <GetTickets ticketPrice={Number(ticketPrice)} />
+        <div className="w-full ">
+          <GetTickets
+            ticketPrice={Number(ticketPrice)}
+            ticketNFT={ticketNFT}
+            metadataHash={metadataHash}
+          />
         </div>
       </div>
     </div>

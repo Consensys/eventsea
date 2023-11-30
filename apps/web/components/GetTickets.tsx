@@ -7,9 +7,15 @@ import MetaMaskProvider from "@/providers/MetamaskProvider";
 
 interface GetTicketsProps {
   ticketPrice: number;
+  ticketNFT: string;
+  metadataHash: string;
 }
 
-const GetTickets: React.FC<GetTicketsProps> = ({ ticketPrice }) => {
+const GetTickets: React.FC<GetTicketsProps> = ({
+  ticketPrice,
+  ticketNFT,
+  metadataHash,
+}) => {
   const [numberOfTickets, setNumberOfTickets] = useState(0);
 
   const handleIncrement = () => {
