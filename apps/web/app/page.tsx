@@ -51,7 +51,7 @@ export default async function Page(): Promise<JSX.Element> {
   return (
     <main>
       <FeaturedEvents events={events} />
-      <ForYou />
+      {events.length > 0 && <ForYou events={events} />}
     </main>
   );
 }
