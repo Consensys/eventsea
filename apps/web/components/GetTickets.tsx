@@ -3,13 +3,20 @@
 // GetTickets.tsx
 import { useState } from "react";
 import { Button } from "./ui/Button";
-import { EventSea } from "@/types";
+import { getTicketContract } from "@/lib/getTicketContract";
+import { ContractPermission } from "@/types";
 
 interface GetTicketsProps {
   ticketPrice: number;
+  ticketNFT: string;
+  metadataHash: string;
 }
 
-const GetTickets: React.FC<GetTicketsProps> = ({ ticketPrice }) => {
+const GetTickets: React.FC<GetTicketsProps> = ({
+  ticketPrice,
+  ticketNFT,
+  metadataHash,
+}) => {
   const [numberOfTickets, setNumberOfTickets] = useState(0);
 
   const handleIncrement = () => {
@@ -19,6 +26,22 @@ const GetTickets: React.FC<GetTicketsProps> = ({ ticketPrice }) => {
   const handleDecrement = () => {
     setNumberOfTickets((prevCount) => prevCount - 1);
   };
+
+  const handleGetTickets = async () => {
+    const nftContract = await getTicketContract({
+      address: ticketNFT,
+      permission: ContractPermission.WRITE,
+    });
+    try {
+      const token = (
+        await nftContract.mint(numberOfTickets, `https://ipfs.io/ipfs/${metadataHash}`)
+      ).wait();
+      console.log(await token, " Minted");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <div className="w-3/4 p-8 mx-auto bg-white shadow-xl rounded-xl">
       <div className="flex items-center justify-between mb-4">
@@ -51,6 +74,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({ ticketPrice }) => {
       <Button
         variant="primary"
         className="w-full text-[#0C200A] p-2 rounded focus:outline-none "
+        onClick={async () => await handleGetTickets()}
       >
         Get tickets
       </Button>
