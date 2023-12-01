@@ -1,5 +1,9 @@
 import FeaturedEvents from "@/components/featured-events";
+
 import ForYou from "@/components/ForYou";
+
+import { getLocationDetails } from "@/lib/actions";
+
 import { getEventContract } from "@/lib/getEventContract";
 import { getEventFactoryContract } from "@/lib/getEventFactoryContract";
 import { ContractPermission, EventSea } from "@/types";
@@ -38,7 +42,7 @@ export default async function Page(): Promise<JSX.Element> {
         address: owner,
       },
       location: {
-        address: location,
+        address: (await getLocationDetails(location))?.name,
       },
       eventType,
       image,

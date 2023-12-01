@@ -39,6 +39,7 @@ import { useDropzone } from "react-dropzone";
 import ImagePreview from "./image-preview";
 import { getEventFactoryContract } from "@/lib/getEventFactoryContract";
 import { add } from "@/lib/ipfs";
+import LocationAutoSuggestInput from "./location-autosuggest-input";
 
 const NUM_OF_STEPS = 3;
 
@@ -49,8 +50,11 @@ const CreateEventForm = () => {
   const router = useRouter();
 
   const formSchema = z.object({
-    title: z.string().nonempty("Title is required"),
-    location: z.string().nonempty("Location is required"),
+    title: z.string().min(1, "Title is required"),
+    location: z.object({
+      placeId: z.string().min(1, "Location key is required"),
+      description: z.string().min(1, "Location value is required"),
+    }),
     description: z.string(),
     type: z.nativeEnum(EventSea.EventType),
     image: z.custom((value) => {
@@ -71,7 +75,10 @@ const CreateEventForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      location: "",
+      location: {
+        placeId: "",
+        description: "",
+      },
       description: "",
       type: EventSea.EventType.Conference,
       image: undefined,
@@ -147,7 +154,7 @@ const CreateEventForm = () => {
       const resp = await eventFactory.createEvent(
         title,
         description,
-        location,
+        location.placeId,
         type,
         imageHash || "",
         Math.floor(dateTime.getTime() / 1000),
@@ -187,9 +194,13 @@ const CreateEventForm = () => {
           <FormItem>
             <FormLabel>Location</FormLabel>
             <FormControl>
-              <Input placeholder="Enter location" {...field}></Input>
+              <div className="w-full">
+                <LocationAutoSuggestInput
+                  fieldValue={field.value}
+                  onSelect={(location) => field.onChange(location)}
+                />
+              </div>
             </FormControl>
-
             <FormMessage />
           </FormItem>
         )}
