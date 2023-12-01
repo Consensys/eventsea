@@ -56,7 +56,7 @@ export default async function FeaturedEvents({ events }: FeaturedEventsProps) {
               </button>
             </Link>
 
-            <div className="p-4 absolute bottom-0 w-full bg-white left-0 space-y-1 border transition-transform ease-linear duration-300 group-hover:translate-x-4 group-hover:translate-y-4 border-[#E4E4E7] rounded-lg font-semibold h-1/3">
+            <div className="p-4 absolute bottom-0 w-full bg-white left-0 space-y-1 border transition-transform ease-linear duration-300 group-hover:translate-x-4 group-hover:translate-y-4 border-[#E4E4E7] rounded-lg font-semibold">
               <h2 className="text-sm text-[#09090B] ">{event.title}</h2>
 
               <p className="text-xs text-[#52525B]">
