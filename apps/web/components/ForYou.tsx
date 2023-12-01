@@ -36,7 +36,7 @@ const ForYou: React.FC<Props> = ({ events }) => {
   const formatEventDate = (dateTime: number) => formatDate(dateTime);
 
   return (
-    <>
+    <div className="container">
       <Table>
         <TableCaption>Events for you</TableCaption>
         <TableHeader>
@@ -58,7 +58,7 @@ const ForYou: React.FC<Props> = ({ events }) => {
           ))}
         </TableBody>
       </Table>
-    </>
+    </div>
   );
 };
 

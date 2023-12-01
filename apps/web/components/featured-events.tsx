@@ -22,13 +22,13 @@ export default async function FeaturedEvents({ events }: FeaturedEventsProps) {
       <h2 className="text-[#09090B] font-semibold text-[28px] mb-4">
         Featured Events
       </h2>
-      <div className="grid grid-cols-1 h-[296px] gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
         {events.map((event, index) => (
           <article
             key={event.id}
             className="relative flex flex-col aspect-square group"
           >
-            <div className="relative h-full overflow-hidden transition-transform duration-300 ease-in-out origin-top rounded-lg group-hover:scale-y-95 group-hover:scale-x-105">
+            <div className="h-full overflow-hidden transition-transform duration-300 ease-in-out origin-top rounded-lg group-hover:scale-y-95 group-hover:scale-x-105">
               <Image
                 src={
                   event.image
