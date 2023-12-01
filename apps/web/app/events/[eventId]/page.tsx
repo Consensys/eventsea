@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { getTicketContract } from "@/lib/getTicketContract";
 import { ContractPermission } from "@/types";
 import { addImg, addTokenMetadata } from "@/lib/ipfs";
+import EventLocationMap from "@/components/event-location-map";
 
 type PageProps = {
   params: {
@@ -94,12 +95,6 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
             layout="fill"
             objectFit="cover"
           />
-          <Image
-            src={`https://eventsea.infura-ipfs.io/ipfs/${image}`}
-            alt={title}
-            layout="fill"
-            objectFit="cover"
-          />
         )}
       </div>
 
@@ -127,9 +122,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
               Location
             </h3>
 
-            <EventLocationMap
-              location={location}
-            />
+            <EventLocationMap location={location} />
           </div>
         </div>
 
