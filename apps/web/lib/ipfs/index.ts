@@ -1,3 +1,5 @@
+"use server";
+
 let baseUrl = `${process.env["INFURA_IPFS_ENDPOINT"]}/api/v0/add`;
 
 const generateSVG = (svg: string) => {
@@ -94,27 +96,8 @@ type AddOptions =
       file: File;
     };
 
-export const add = async (data: AddOptions) => {
+export const add = async (data: FormData) => {
   let baseUrl = `https://ipfs.infura.io:5001/api/v0/add`;
-  let hash: string;
-  const formData = new FormData();
-
-  if ("blob" in data) {
-    formData.append("data", data.blob, data.fileName);
-  }
-
-  if ("files" in data) {
-    const { files } = data;
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
-    baseUrl += "?wrap-with-directory=true";
-  }
-
-  if ("file" in data) {
-    const { file } = data;
-    formData.append("file", file);
-  }
 
   try {
     const response = await fetch(baseUrl, {
@@ -123,25 +106,15 @@ export const add = async (data: AddOptions) => {
         Authorization:
           "Basic " +
           Buffer.from(
-            "2XIxqbP9VIKNwExz861Ss0f7pwn" + ":" + "752ee430a7eac74632554f6ebe3163cf"
+            process.env["INFURA_API_KEY"] +
+              ":" +
+              process.env["INFURA_API_SECRET"]
           ).toString("base64"),
       },
-      body: formData,
+      body: data,
     });
 
-    if ("files" in data) {
-      const cids = await response.text();
-      const lines = cids.split("\n").filter(Boolean);
-      const directory = lines.at(-1);
-      if (!directory) {
-        throw new Error("No directory returned from IPFS");
-      }
-      hash = JSON.parse(directory).Hash;
-    } else {
-      hash = (await response.json()).Hash;
-    }
-
-    return hash;
+    return (await response.json()).Hash;
   } catch (error) {
     console.error("Error adding file", error);
   }

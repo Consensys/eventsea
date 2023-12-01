@@ -18,12 +18,12 @@ export default async function FeaturedEvents({ events }: FeaturedEventsProps) {
   const formatEventDate = (dateTime: number) => formatDate(dateTime);
 
   return (
-    <div className="container max-w-6xl py-6 lg:py-10">
+    <div className="container max-w-6xl py-6 h-fit lg:py-10">
       <h2 className="text-[#09090B] font-semibold text-[28px] mb-4">
         Featured Events
       </h2>
-      <div className="grid grid-cols-1 h-[296px] gap-8 md:grid-cols-2 lg:grid-cols-4">
-        {events.map((event, index) => (
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        {events.map((event) => (
           <article
             key={event.id}
             className="relative flex flex-col aspect-square group"

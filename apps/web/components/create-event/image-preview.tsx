@@ -1,7 +1,8 @@
 import { FC } from "react";
 import Image from "next/image";
-import { XCircleIcon } from "@heroicons/react/24/outline";
+import { X } from "lucide-react";
 import { twMerge } from "tailwind-merge";
+import { Button } from "../ui/Button";
 
 interface ImagePreviewProps {
   image: File;
@@ -23,10 +24,13 @@ const ImagePreview: FC<ImagePreviewProps> = ({
         containerClassName
       )}
     >
-      <XCircleIcon
-        onClick={handleOnRemove}
-        className="absolute w-5 h-5 cursor-pointer top-1 right-1 fill-white stroke-gray-900"
-      />
+      <Button variant="outline" size="icon">
+        <X
+          onClick={handleOnRemove}
+          size={16}
+          className="absolute top-1 right-1 "
+        />
+      </Button>
       <div className="flex flex-col w-full h-full">
         <div
           className={twMerge(
