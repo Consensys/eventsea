@@ -1,5 +1,3 @@
-// Layout.tsx
-
 import "./globals.css";
 import type { Metadata } from "next";
 import NavBar from "@/components/Navbar";
@@ -16,9 +14,8 @@ export default function RootLayout({
 }): JSX.Element {
   return (
     <html lang="en">
-      <body className="bg-[#F4F4F5] px-3 py-2 md:py-3 lg:px-0 lg:max-w-screen-xl mx-auto">
+      <body className="bg-[#F4F4F5] px-3 py-2 md:py-3 lg:px-0 mx-auto">
         <NavBar />
-
         {children}
       </body>
     </html>
