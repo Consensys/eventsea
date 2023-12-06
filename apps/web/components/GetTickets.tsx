@@ -7,7 +7,7 @@ import MetaMaskProvider from "@/providers/MetamaskProvider";
 import { formatEther } from "ethers";
 
 interface GetTicketsProps {
-  ticketPrice: number;
+  ticketPrice: bigint;
   ticketNFT: string;
   metadataHash: string;
 }
@@ -29,7 +29,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
 
   return (
     <MetaMaskProvider>
-      <div className="p-8 bg-white shadow-xl rounded-xl full md:w-3/4 md:sticky md:top-4 h-fit">
+      <div className="bg-white p-8 rounded-xl shadow-xl full md:w-full md:sticky md:top-4 h-fit">
         <div className="flex items-center justify-between mb-4">
           <span className="text-gray-600">Ticket Price</span>
           <span>{formatEther(ticketPrice)}ETH</span>
