@@ -45,6 +45,8 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
 
   const formattedDate = format(new Date(Number(date) * 1000), "MMM. d");
 
+  const ownedTicket = await ticketContract.ownerOf(1);
+
   return (
     <div className="flex flex-col gap-10 px-16 py-6 mb-8 rounded-md">
       <Image
@@ -101,6 +103,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
             title={title}
             date={date}
           />
+          {ownedTicket && <div>You own {ownedTicket}</div>}
         </div>
       </div>
     </div>
