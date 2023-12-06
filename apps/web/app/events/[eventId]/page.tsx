@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import GetTickets from "@/components/GetTickets";
-
 import Image from "next/image";
 import { getEventContract } from "@/lib/getEventContract";
 import { format } from "date-fns";
@@ -47,17 +46,16 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
   const formattedDate = format(new Date(Number(date) * 1000), "MMM. d");
 
   return (
-    <div className="flex flex-col items-center gap-10 py-6 mb-8 rounded-md lg:px-16">
-      <div className="absolute top-0 z-[-1]">
-        <Image
-          src="/green-bg.webp"
-          width={1350}
-          height={522.24}
-          quality={100}
-          className="absolute top-0 z-[-1] left-40"
-          alt="Background image"
-        />
-      </div>
+    <div className="flex flex-col gap-10 px-16 py-6 mb-8 rounded-md">
+      <Image
+        src="/green-bg.webp"
+        width={1350}
+        height={522.24}
+        quality={100}
+        className="absolute top-0 z-[-1] left-40"
+        alt="Background image"
+      />
+
       <div className="relative w-full h-[450px] rounded-md mb-4 overflow-hidden">
         {image && (
           <Image
@@ -69,12 +67,12 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
         )}
       </div>
 
-      <div className="grid w-full md:grid-cols-2 justify-items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-20 justify-items-center">
         <div className="flex flex-col w-full">
           <h1 className="mb-2 text-3xl font-bold">{title}</h1>
           {/* <span className="inline-block p-1 mb-4 text-sm text-gray-500 bg-green-200 rounded-md w-fit">
-            {tags.join(", ")}
-          </span> */}
+  {tags.join(", ")}
+</span> */}
 
           <div className="my-4">
             <h3 className="mb-1 text-lg font-semibold text-gray-700">Date</h3>
@@ -93,14 +91,16 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
               Location
             </h3>
 
-            <EventLocationMap
-              location={location}
-            />
+            <EventLocationMap location={location} />
           </div>
         </div>
-
-        <div className="flex justify-center w-full md:justify-end">
-          <GetTickets ticketPrice={ticketPrice} />
+        <div className="w-full ">
+          <GetTickets
+            ticketPrice={ticketPrice}
+            ticketNFT={ticketNFT}
+            title={title}
+            date={date}
+          />
         </div>
       </div>
     </div>

@@ -8,9 +8,10 @@ import { ContractPermission } from "@/types";
 import { GasFeeCard } from "./GasFeeCard";
 import MetaMaskProvider from "@/providers/MetamaskProvider";
 import { addImg, addTokenMetadata } from "@/lib/ipfs";
+import { formatEther } from "ethers";
 
 interface GetTicketsProps {
-  ticketPrice: number;
+  ticketPrice: bigint;
   ticketNFT: string;
   title: string;
   date: bigint;
@@ -23,7 +24,6 @@ const GetTickets: React.FC<GetTicketsProps> = ({
   date,
 }) => {
   const [numberOfTickets, setNumberOfTickets] = useState(0);
-  const [metadataHash, setMetadataHash] = useState("");
 
   const handleUploadSVG = async () => {
     const svgIPFS = await addImg(`
@@ -75,14 +75,14 @@ const GetTickets: React.FC<GetTicketsProps> = ({
       return;
     }
     try {
-      await handleUploadSVG();
+      const metadataHash = await handleUploadSVG();
       console.log(metadataHash);
       const token = (
         await nftContract.mint(
           numberOfTickets,
           `https://ipfs.io/ipfs/${metadataHash}`,
           {
-            value: ticketPrice * numberOfTickets,
+            value: ticketPrice * BigInt(numberOfTickets.toString()),
           }
         )
       ).wait();
