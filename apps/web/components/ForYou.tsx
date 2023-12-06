@@ -1,6 +1,3 @@
-"use client";
-
-import React, { useState } from "react";
 import { EventSea } from "@/types";
 import { format } from "date-fns";
 import {
@@ -18,21 +15,10 @@ type Props = {
 };
 
 const ForYou: React.FC<Props> = ({ events }) => {
-  const [selectedCountry, setSelectedCountry] = useState("🇺🇸 USA");
-
-  // Countries dropdown - you can expand this list
-  const countries = [
-    "🇺🇸 USA",
-    "🇨🇦 Canada",
-    "🇬🇧 UK",
-    "🇦🇺 Australia",
-    "🇨🇴 Colombia",
-    // ...add more countries as needed
-  ];
-
   const formatDate = (timestamp: number) =>
     format(new Date(timestamp * 1000), "MMM. d");
 
+  console.log(events);
   const formatEventDate = (dateTime: number) => formatDate(dateTime);
 
   return (
@@ -48,14 +34,16 @@ const ForYou: React.FC<Props> = ({ events }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {events.map((event, index) => (
-            <TableRow key={index}>
-              <TableCell>{event.title}</TableCell>
-              <TableCell>{event.location.address}</TableCell>
-              <TableCell>{formatEventDate(event.dateTime)}</TableCell>
-              <TableCell>1 ETH</TableCell>
-            </TableRow>
-          ))}
+          {events.map((event, index) => {
+            return (
+              <TableRow key={index}>
+                <TableCell>{event.title}</TableCell>
+                <TableCell>{event.location.address}</TableCell>
+                <TableCell>{formatEventDate(event.dateTime)}</TableCell>
+                <TableCell>{event.ticketInfo.price}</TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
