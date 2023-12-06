@@ -18,17 +18,17 @@ export default async function FeaturedEvents({ events }: FeaturedEventsProps) {
   const formatEventDate = (dateTime: number) => formatDate(dateTime);
 
   return (
-    <div className="container max-w-6xl py-6 h-fit lg:py-10">
+    <div className="px-8 max-w-6xl py-6 h-fit lg:py-10">
       <h2 className="text-[#09090B] font-semibold text-[28px] mb-4">
         Featured Events
       </h2>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-        {events.map((event) => (
+        {events.map((event, index) => (
           <article
             key={event.id}
             className="relative flex flex-col aspect-square group"
           >
-            <div className="relative h-full overflow-hidden transition-transform duration-300 ease-in-out origin-top rounded-lg group-hover:scale-y-95 group-hover:scale-x-105">
+            <div className="h-full overflow-hidden transition-transform duration-300 ease-in-out origin-top rounded-lg group-hover:scale-y-95 group-hover:scale-x-105">
               <Image
                 src={
                   event.image
@@ -56,7 +56,7 @@ export default async function FeaturedEvents({ events }: FeaturedEventsProps) {
               </button>
             </Link>
 
-            <div className="p-4 absolute bottom-0 w-full bg-white left-0 space-y-1 border transition-transform ease-linear duration-300 group-hover:translate-x-4 group-hover:translate-y-4 border-[#E4E4E7] rounded-lg font-semibold h-1/3">
+            <div className="p-4 absolute bottom-0 w-full bg-white left-0 space-y-1 border transition-transform ease-linear duration-300 group-hover:translate-x-4 group-hover:translate-y-4 border-[#E4E4E7] rounded-lg font-semibold">
               <h2 className="text-sm text-[#09090B] ">{event.title}</h2>
 
               <p className="text-xs text-[#52525B]">

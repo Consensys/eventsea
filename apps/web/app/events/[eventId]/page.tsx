@@ -5,6 +5,7 @@ import { getEventContract } from "@/lib/getEventContract";
 import { format } from "date-fns";
 import { getTicketContract } from "@/lib/getTicketContract";
 import { ContractPermission } from "@/types";
+import { addImg, addTokenMetadata } from "@/lib/ipfs";
 import EventLocationMap from "@/components/event-location-map";
 
 type PageProps = {
@@ -18,23 +19,51 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
     return notFound();
   }
 
-  const eventContact = await getEventContract({
+  const eventContract = await getEventContract({
     address: eventId,
     permission: ContractPermission.READ,
   });
 
   const eventData = await Promise.all([
-    eventContact.title(),
-    eventContact.description(),
-    eventContact.location(),
-    eventContact.eventType(),
-    eventContact.image(),
-    eventContact.date(),
-    eventContact.ticketNFT(),
+    eventContract.title(),
+    eventContract.description(),
+    eventContract.location(),
+    eventContract.eventType(),
+    eventContract.image(),
+    eventContract.date(),
+    eventContract.ticketNFT(),
   ]);
 
   const [title, description, location, eventType, image, date, ticketNFT] =
     eventData;
+
+  const svgIPFS = await addImg(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+        <text x="150" y="125" font-size="40" fill="black">
+          ${title}
+        </text>
+        <text x="150" y="170" font-size="20" fill="black">
+          ${date}
+        </text>
+        <text x="150" y="215" font-size="20" fill="black">
+          ${location}
+        </text>
+      </svg>
+    `);
+
+  const tokenMetadata = {
+    name: title,
+    description: `Ticket for ${title} on ${Number(date)}`,
+    image: `https://ipfs.io/ipfs/${svgIPFS.Hash}`,
+    attributes: [
+      {
+        trait_type: "Ticket ID",
+        value: 1,
+      },
+    ],
+  };
+
+  const metadataHash = await addTokenMetadata(tokenMetadata);
 
   const ticketContract = await getTicketContract({
     address: ticketNFT,
@@ -46,16 +75,17 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
   const formattedDate = format(new Date(Number(date) * 1000), "MMM. d");
 
   return (
-    <div className="flex flex-col gap-10 px-16 py-6 mb-8 rounded-md">
-      <Image
-        src="/green-bg.webp"
-        width={1350}
-        height={522.24}
-        quality={100}
-        className="absolute top-0 z-[-1] left-40"
-        alt="Background image"
-      />
-
+    <div className="py-6 lg:px-16 flex flex-col items-center gap-10 rounded-md mb-8">
+      <div className="absolute top-0 z-[-1]">
+        <Image
+          src="/green-bg.webp"
+          width={1350}
+          height={522.24}
+          quality={100}
+          className="mx-auto"
+          alt="Background image"
+        />
+      </div>
       <div className="relative w-full h-[450px] rounded-md mb-4 overflow-hidden">
         {image && (
           <Image
@@ -67,12 +97,12 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-20 justify-items-center">
+      <div className="relative grid md:grid-cols-2 justify-items-center w-full gap-10">
         <div className="flex flex-col w-full">
-          <h1 className="mb-2 text-3xl font-bold">{title}</h1>
-          {/* <span className="inline-block p-1 mb-4 text-sm text-gray-500 bg-green-200 rounded-md w-fit">
-  {tags.join(", ")}
-</span> */}
+          <h1 className="text-3xl font-bold mb-2">{title}</h1>
+          <span className="text-sm text-gray-500 bg-green-200 p-1 rounded-md inline-block mb-4 w-fit">
+            {eventType}
+          </span>
 
           <div className="my-4">
             <h3 className="mb-1 text-lg font-semibold text-gray-700">Date</h3>
@@ -86,20 +116,16 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
             <p className="text-gray-900">{description}</p>
           </div>
 
-          <div className="flex flex-col items-center gap-6 my-4 md:items-start">
-            <h3 className="mb-1 text-lg font-semibold text-gray-700">
-              Location
-            </h3>
-
+          <div className="my-4 flex flex-col gap-6 items-center md:items-start">
             <EventLocationMap location={location} />
           </div>
         </div>
-        <div className="w-full ">
+
+        <div className="w-full md:pl-20">
           <GetTickets
             ticketPrice={ticketPrice}
             ticketNFT={ticketNFT}
-            title={title}
-            date={date}
+            metadataHash={metadataHash}
           />
         </div>
       </div>
