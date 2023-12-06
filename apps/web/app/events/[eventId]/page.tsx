@@ -39,7 +39,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
 
   const ticketContract = await getTicketContract({
     address: ticketNFT,
-    permission: ContractPermission.WRITE,
+    permission: ContractPermission.READ,
   });
 
   const ticketPrice = await ticketContract._ticketPrice();
