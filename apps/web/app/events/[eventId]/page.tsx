@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import GetTickets from "@/components/GetTickets";
-
 import Image from "next/image";
 import { getEventContract } from "@/lib/getEventContract";
 import { format } from "date-fns";
@@ -37,34 +36,6 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
 
   const [title, description, location, eventType, image, date, ticketNFT] =
     eventData;
-
-  const svgIPFS = await addImg(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
-        <text x="150" y="125" font-size="40" fill="black">
-          ${title}
-        </text>
-        <text x="150" y="170" font-size="20" fill="black">
-          ${date}
-        </text>
-        <text x="150" y="215" font-size="20" fill="black">
-          ${location}
-        </text>
-      </svg>
-    `);
-
-  const tokenMetadata = {
-    name: title,
-    description: `Ticket for ${title} on ${Number(date)}`,
-    image: `https://ipfs.io/ipfs/${svgIPFS.Hash}`,
-    attributes: [
-      {
-        trait_type: "Ticket ID",
-        value: 1,
-      },
-    ],
-  };
-
-  const metadataHash = await addTokenMetadata(tokenMetadata);
 
   const ticketContract = await getTicketContract({
     address: ticketNFT,
@@ -126,7 +97,8 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
           <GetTickets
             ticketPrice={ticketPrice}
             ticketNFT={ticketNFT}
-            metadataHash={metadataHash}
+            title={title}
+            date={date}
           />
         </div>
       </div>

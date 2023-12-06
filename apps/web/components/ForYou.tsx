@@ -17,8 +17,6 @@ type Props = {
 const ForYou: React.FC<Props> = ({ events }) => {
   const formatDate = (timestamp: number) =>
     format(new Date(timestamp * 1000), "MMM. d");
-
-  console.log(events);
   const formatEventDate = (dateTime: number) => formatDate(dateTime);
 
   return (
