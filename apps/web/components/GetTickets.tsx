@@ -34,11 +34,18 @@ const GetTickets: React.FC<GetTicketsProps> = ({
       address: ticketNFT,
       permission: ContractPermission.WRITE,
     });
+    if (numberOfTickets <= 0) {
+      console.log("Please select number of tickets");
+      return;
+    }
     try {
       const token = (
         await nftContract.mint(
           numberOfTickets,
-          `https://ipfs.io/ipfs/${metadataHash}`
+          `https://ipfs.io/ipfs/${metadataHash}`,
+          {
+            value: ticketPrice * numberOfTickets,
+          }
         )
       ).wait();
       console.log(await token, " Minted");
