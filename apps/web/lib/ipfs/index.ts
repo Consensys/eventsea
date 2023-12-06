@@ -34,9 +34,7 @@ export const addImg = async (image: string) => {
         Authorization:
           "Basic " +
           Buffer.from(
-            process.env["INFURA_API_KEY"] +
-              ":" +
-              process.env["INFURA_API_SECRET"]
+            process.env.INFURA_API_KEY + ":" + process.env.INFURA_API_SECRET
           ).toString("base64"),
       },
       body: formData,
@@ -123,7 +121,9 @@ export const add = async (data: AddOptions) => {
         Authorization:
           "Basic " +
           Buffer.from(
-            "2XIxqbP9VIKNwExz861Ss0f7pwn" + ":" + "752ee430a7eac74632554f6ebe3163cf"
+            process.env["INFURA_API_KEY"] +
+              ":" +
+              process.env["INFURA_API_SECRET"]
           ).toString("base64"),
       },
       body: formData,
