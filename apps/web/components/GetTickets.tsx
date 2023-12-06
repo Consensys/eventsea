@@ -82,7 +82,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
           numberOfTickets,
           `https://ipfs.io/ipfs/${metadataHash}`,
           {
-            value: ticketPrice * BigInt(numberOfTickets.toString()),
+            value: Number(ticketPrice) * numberOfTickets,
           }
         )
       ).wait();
