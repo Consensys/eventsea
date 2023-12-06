@@ -61,8 +61,9 @@ const EventLocationMap: FC<EventLocationMapProps> = ({ location }) => {
 
   return (
     <div className="w-full">
-      <div className="flex gap-4 px-5 py-6 bg-white border-t border-l border-r rounded-ss-xl rounded-se-xl">
+      <div className="flex gap-4 items-center px-5 py-6 bg-white border-t border-l border-r rounded-ss-xl rounded-se-xl">
         <LocationIcon className="w-8 h-8" />
+        <h3 className="text-lg font-semibold text-gray-700 mb-1">Location</h3>
         <p className="text-gray-900">{address}</p>
       </div>
       <div className="w-full h-[300px]">

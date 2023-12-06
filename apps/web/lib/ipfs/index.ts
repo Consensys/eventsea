@@ -51,12 +51,12 @@ export const addImg = async (image: string) => {
 };
 
 type Metadata = {
-  name: FormDataEntryValue | null;
+  name: string;
   description: string;
   image: string;
   attributes: {
     trait_type: string;
-    value: FormDataEntryValue | null;
+    value: number;
   }[];
 };
 

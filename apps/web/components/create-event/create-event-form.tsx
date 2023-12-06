@@ -146,7 +146,8 @@ const CreateEventForm = () => {
       <DialogTrigger asChild>
         {connected && (
           <Button variant="outline" type="button">
-            Create event
+            <span className="hidden md:block">Create event</span>
+            <span className="block md:hidden">Create</span>
           </Button>
         )}
       </DialogTrigger>

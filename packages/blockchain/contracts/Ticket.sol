@@ -49,8 +49,8 @@ contract Ticket is ERC721URIStorage, Ownable(tx.origin), Pausable {
     function mint(
         uint256 amount,
         string memory _tokenURI
-    ) external payable whenNotPaused canMint(amount) {
-        for (uint256 i = 1; i < amount; i++) {
+    ) public payable whenNotPaused canMint(amount) {
+        for (uint256 i = 1; i <= amount; i++) {
             tokenId++;
             _safeMint(msg.sender, tokenId);
             _setTokenURI(tokenId, _tokenURI);

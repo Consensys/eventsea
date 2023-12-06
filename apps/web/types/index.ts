@@ -33,7 +33,6 @@ export namespace EventSea {
   }
 
   interface TicketTier {
-    address: string
     name: string;
     price: number;
     availableTickets?: number;
@@ -60,7 +59,7 @@ export namespace EventSea {
     location: Location;
     eventType: EventType;
     dateTime: number; // Timestamp in UTC
-    ticketInfo: TicketTier[];
+    ticketInfo: TicketTier;
     participantCount?: number;
     participants?: Participant[];
     tags?: string[];
