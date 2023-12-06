@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "./ui/Button";
 import { GasFeeCard } from "./GasFeeCard";
 import MetaMaskProvider from "@/providers/MetamaskProvider";
+import { formatEther } from "ethers";
 
 interface GetTicketsProps {
   ticketPrice: number;
@@ -31,7 +32,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
       <div className="p-8 bg-white shadow-xl rounded-xl full md:w-3/4 md:sticky md:top-4 h-fit">
         <div className="flex items-center justify-between mb-4">
           <span className="text-gray-600">Ticket Price</span>
-          <span>{ticketPrice}ETH</span>
+          <span>{formatEther(ticketPrice)}ETH</span>
         </div>
         <div className="flex items-center justify-between mb-4">
           <span className="text-gray-600">Number of tickets</span>
@@ -54,7 +55,12 @@ const GetTickets: React.FC<GetTicketsProps> = ({
         </div>
         <div className="flex items-center justify-between mb-4">
           <span className="text-gray-600">Total</span>
-          <span>{(numberOfTickets * ticketPrice).toFixed(2)}ETH</span>
+          <span>
+            {formatEther(
+              (BigInt(numberOfTickets.toString()) * ticketPrice).toString()
+            )}
+            ETH
+          </span>
         </div>
         <div className="flex items-center justify-between mb-4">
           <span className="text-gray-600">Gas fee</span>

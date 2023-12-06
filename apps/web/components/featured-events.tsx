@@ -18,7 +18,7 @@ export default async function FeaturedEvents({ events }: FeaturedEventsProps) {
   const formatEventDate = (dateTime: number) => formatDate(dateTime);
 
   return (
-    <div className="container max-w-6xl py-6 lg:py-10">
+    <div className="container max-w-6xl py-6 h-fit lg:py-10">
       <h2 className="text-[#09090B] font-semibold text-[28px] mb-4">
         Featured Events
       </h2>

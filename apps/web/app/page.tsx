@@ -15,7 +15,7 @@ export default async function Page(): Promise<JSX.Element> {
     permission: ContractPermission.READ,
   });
 
-  const eventAddresses = await eventsFactory.getEvents();
+  const eventAddresses = (await eventsFactory.getEvents()).slice(0, 8);
 
   const eventsPromises = eventAddresses.map(async (address) => {
     const eventContact = await getEventContract({
