@@ -75,12 +75,12 @@ const GetTickets: React.FC<GetTicketsProps> = ({
       return;
     }
     try {
-      const metadataHash = await handleUploadSVG();
+      const { Hash } = await handleUploadSVG();
       const totalAmount = ticketPrice * BigInt(numberOfTickets);
       const token = (
         await nftContract.mint(
           numberOfTickets,
-          `https://ipfs.io/ipfs/${metadataHash}`,
+          `https://ipfs.io/ipfs/${Hash}`,
           {
             value: parseEther(totalAmount.toString()),
           }
@@ -129,7 +129,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
         </div>
         <div className="flex items-center justify-between mb-4">
           <span className="text-gray-600">Gas fee</span>
-          <GasFeeCard />
+          {/* <GasFeeCard /> */}
         </div>
         <Button
           variant="primary"
