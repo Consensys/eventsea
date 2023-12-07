@@ -8,11 +8,10 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract Ticket is ERC721URIStorage, Ownable(tx.origin), Pausable {
     uint256 public MAX_SUPPLY;
-    uint256 public PRICE = 0.001 ether;
     uint256 public constant MAX_PER_MINT = 5;
     address public eventOwner;
     uint256 public tokenId = 0;
-    uint public _ticketPrice;
+    uint public _ticketPrice = 0.001 ether;
 
     event PermanentURI(string _value, uint256 indexed _id, address indexed _to);
     event TicketMinted(address indexed _to, uint256 indexed _tokenId);
@@ -40,7 +39,7 @@ contract Ticket is ERC721URIStorage, Ownable(tx.origin), Pausable {
             amount <= MAX_PER_MINT,
             "Cannot mint more than 5 tickets at a time"
         );
-        require(msg.value >= PRICE * amount, "Not enough ETH sent");
+        require(msg.value >= _ticketPrice * amount, "Not enough ETH sent");
         require(tokenId + amount <= MAX_SUPPLY, "Not enough tickets left");
         require(amount > 0, "Amount must be greater than zero");
         _;
@@ -49,8 +48,8 @@ contract Ticket is ERC721URIStorage, Ownable(tx.origin), Pausable {
     function mint(
         uint256 amount,
         string memory _tokenURI
-    ) external payable whenNotPaused canMint(amount) {
-        for (uint256 i = 1; i < amount; i++) {
+    ) public payable whenNotPaused canMint(amount) {
+        for (uint256 i = 1; i <= amount; i++) {
             tokenId++;
             _safeMint(msg.sender, tokenId);
             _setTokenURI(tokenId, _tokenURI);
