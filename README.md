@@ -4,7 +4,7 @@
 
 ### Overview:
 
-EventSea is a decentralized application (DApp) designed to revolutionize the way events are organized and attended. Built on the top of Linea, EventSea offers a transparent, secure, and user-centric platform for event creation and ticketing.
+EventSea is a decentralized events platform for events organizers and attendees. Built on the top of Linea, EventSea offers a transparent, secure, and user-centric platform for event creation and ticketing.
 
 ![image](./eventsea.png)
 
@@ -18,8 +18,10 @@ EventSea is a decentralized application (DApp) designed to revolutionize the way
   Participants can mint their own tickets, ensuring authenticity and reducing the risk of counterfeit tickets.
   Each ticket is a unique digital asset on the blockchain, providing traceability and security.
 
-- Ticket Validation:
-  EventSea offers built-in ticket validation mechanisms, ensuring that each ticket is genuine and corresponds to a legitimate purchase.
+##### RoadMap:
+
+- Adding Ticket Validation:
+  EventSea will offer built-in ticket validation mechanisms, ensuring that each ticket is genuine and corresponds to a legitimate purchase.
   Attendees can confidently attend events knowing their tickets are valid and recognized by the platform.
 
 #### Benefits:
