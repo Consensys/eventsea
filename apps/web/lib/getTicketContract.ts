@@ -10,22 +10,27 @@ type Args = {
 };
 
 export const getTicketContract = async ({ address, permission }: Args) => {
-  const network = process.env.NETWORK || "localhost";
-  const rpcUrl = getNetworkRPC(network);
+  try {
+    const network = process.env.NETWORK || "localhost";
+    const rpcUrl = getNetworkRPC(network);
 
-  const provider =
-    typeof window !== "undefined" && typeof window.ethereum !== "undefined"
-      ? new ethers.BrowserProvider(window.ethereum!)
-      : new ethers.JsonRpcProvider(rpcUrl);
+    const provider =
+      typeof window !== "undefined" && typeof window.ethereum !== "undefined"
+        ? new ethers.BrowserProvider(window.ethereum!)
+        : new ethers.JsonRpcProvider(rpcUrl);
 
-  const signerOrProvider =
-    permission === ContractPermission.READ
-      ? provider
-      : await provider.getSigner();
+    const signerOrProvider =
+      permission === ContractPermission.READ
+        ? provider
+        : await provider.getSigner();
 
-  return new ethers.Contract(
-    address,
-    contract.abi,
-    signerOrProvider
-  ) as unknown as Ticket;
+    return new ethers.Contract(
+      address,
+      contract.abi,
+      signerOrProvider
+    ) as unknown as Ticket;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
