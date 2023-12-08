@@ -1,4 +1,5 @@
 import { EventSea } from "@/types";
+import { formatEther } from "ethers";
 import { format } from "date-fns";
 import {
   Table,
@@ -38,7 +39,7 @@ const ForYou: React.FC<Props> = ({ events }) => {
                 <TableCell>{event.title}</TableCell>
                 <TableCell>{event.location.address}</TableCell>
                 <TableCell>{formatEventDate(event.dateTime)}</TableCell>
-                <TableCell>{event.ticketInfo.price}</TableCell>
+                <TableCell>{formatEther(event.ticketInfo.price)} ETH</TableCell>
               </TableRow>
             );
           })}
