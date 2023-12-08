@@ -66,9 +66,9 @@ export const ConnectWalletButton = () => {
 
 export const NavBar = () => {
   return (
-    <nav className="flex items-center gap-4 justify-between max-w-screen-xl md:px-6 mx-auto bg-white border py-7 rounded-xl">
+    <nav className="flex items-center justify-between gap-4 mx-auto bg-white border md:px-6 py-7 rounded-xl">
       <MetaMaskProvider>
-        <Link href="/" className="flex md:gap-1 px-2 md:px-6">
+        <Link href="/" className="flex px-2 md:gap-1 md:px-6">
           <EventSeaLogo />
           <span className="hidden text-2xl font-bold sm:block">
             <span className="text-[#0C200A]">Event</span>

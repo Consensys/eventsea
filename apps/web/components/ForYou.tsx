@@ -1,17 +1,16 @@
 import { EventSea } from "@/types";
+import { formatEther } from "ethers";
 import { format } from "date-fns";
 import {
   Table,
   TableBody,
   TableCaption,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
 import Image from "next/image";
 import Link from "next/link";
-import { formatEther } from "ethers";
 
 type Props = {
   events: EventSea.Event[];
@@ -38,7 +37,7 @@ const ForYou: React.FC<Props> = ({ events }) => {
           return (
             <TableRow className="md:flex md:flex-col md:border-b-0">
               <Link
-                className="bg-white md:border grid grid-cols-4 items-center md:rounded-xl py-1 hover:bg-opacity-50 duration-100"
+                className="grid items-center grid-cols-4 py-1 duration-100 bg-white md:border md:rounded-xl hover:bg-opacity-50"
                 href={`/events/${event.id}`}
                 key={index}
               >

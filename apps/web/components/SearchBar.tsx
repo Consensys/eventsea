@@ -1,59 +1,133 @@
+"use client";
+
 import SearchIcon from "../public/icons/SearchIcon";
+import debounce from "lodash.debounce";
+import { FC, useEffect, useState } from "react";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { getEvents } from "@/lib/actions";
+import { EventSea } from "@/types";
+import Link from "next/link";
 import { Button } from "./ui/Button";
-import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+
+interface SearchInputProps {
+  searchValue: string;
+  setSearchValue: (value: string) => void;
+}
+
+const SearchInput: FC<SearchInputProps> = ({ searchValue, setSearchValue }) => {
+  return (
+    <CommandInput
+      value={searchValue}
+      onValueChange={setSearchValue}
+      className="combobox-input"
+      placeholder="Search an event...."
+    />
+  );
+};
 
 export const SearchBar = () => {
+  const [events, setEvents] = useState<EventSea.Event[]>([]);
   const [searchValue, setSearchValue] = useState("");
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [loading, setIsLoading] = useState(false);
+
+  const [open, setOpen] = useState(false);
+
+  const debouncedSearch = debounce((searchValue) => {
+    const fetchEvents = async () => {
+      if (!searchValue) {
+        return setEvents([]);
+      }
+      setIsLoading(true);
+      const events = await getEvents(searchValue);
+      setEvents(events || []);
+      setIsLoading(false);
+    };
+
+    fetchEvents();
+  }, 500);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((open) => !open);
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
+  useEffect(() => {
+    debouncedSearch(searchValue);
+  }, [searchValue]);
 
   return (
     <div className="flex items-center gap-4">
-      {/* Search bar with search icon for larger screens */}
-      <div className={`relative w-64 hidden sm:block`}>
-        {searchValue === "" && (
-          <SearchIcon className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-        )}
-        <input
-          type="text"
-          placeholder={searchValue === "" ? "Find your event" : ""}
-          className="border rounded-md p-2 pl-8 pr-8 w-full"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+      <div className="">
+        <Button
+          onClick={() => setOpen(true)}
+          variant="outline"
+          className="px-2 bg-muted md:px-4"
+        >
+          <SearchIcon className="w-5 h-5 sm:hidden" />
+          <div className="justify-between hidden w-36 md:w-48 sm:flex">
+            search events
+            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-card-foreground opacity-100">
+              <span className="text-xs">⌘</span>K
+            </kbd>
+          </div>
+        </Button>
+      </div>
+      <CommandDialog
+        open={open}
+        onOpenChange={() => {
+          setOpen(!open);
+          setSearchValue("");
+          setEvents([]);
+        }}
+      >
+        <SearchInput
+          searchValue={searchValue}
+          setSearchValue={(val) => setSearchValue(val)}
         />
-        {searchValue === "" && (
-          <span className="absolute right-2.5 top-1/2 transform -translate-y-1/2">
-            ⌘ K
-          </span>
-        )}
-      </div>
-      {/* Search icon for smaller screens */}
-      <div className="sm:hidden">
-        <Popover>
-          <PopoverTrigger>
-            <SearchIcon className="w-5 h-5" />
-          </PopoverTrigger>
-          <PopoverContent>
-            <div className="relative w-64">
-              {searchValue === "" && (
-                <SearchIcon className="absolute left-2.5 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-              )}
-              <input
-                type="text"
-                placeholder={searchValue === "" ? "Find your event" : ""}
-                className="border rounded-md p-2 pl-8 pr-8 w-full"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-              />
-              {searchValue === "" && (
-                <span className="absolute right-2.5 top-1/2 transform -translate-y-1/2">
-                  ⌘ K
-                </span>
-              )}
-            </div>
-          </PopoverContent>
-        </Popover>
-      </div>
+        <CommandList>
+          <CommandEmpty className="py-0">
+            {loading ? (
+              <div className="w-full h-1 rounded bg-primary animate-pulse"></div>
+            ) : (
+              <div className="py-6 text-center">No events found</div>
+            )}
+          </CommandEmpty>
+          <CommandList>
+            <CommandGroup>
+              {!loading &&
+                events.map(({ id, title }) => (
+                  <CommandItem
+                    key={id}
+                    value={title}
+                    onSelect={() => {
+                      setOpen(false);
+                      setSearchValue("");
+                      setEvents([]);
+                    }}
+                  >
+                    <Link className="flex-1" href={`/events/${id}`}>
+                      {title}
+                    </Link>
+                  </CommandItem>
+                ))}
+            </CommandGroup>
+          </CommandList>
+        </CommandList>
+      </CommandDialog>
     </div>
   );
 };
