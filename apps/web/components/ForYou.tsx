@@ -9,6 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
+import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
   events: EventSea.Event[];
@@ -20,31 +22,43 @@ const ForYou: React.FC<Props> = ({ events }) => {
   const formatEventDate = (dateTime: number) => formatDate(dateTime);
 
   return (
-    <div className="container">
-      <Table>
-        <TableCaption>Events for you</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Location</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Ticket price</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {events.map((event, index) => {
-            return (
-              <TableRow key={index}>
-                <TableCell>{event.title}</TableCell>
+    <Table>
+      <TableCaption>Events for you</TableCaption>
+      <TableHeader className="[&_tr]:border-0">
+        <TableRow className="flex justify-between hover:bg-transparent">
+          <TableHead>Title</TableHead>
+          <TableHead>Location</TableHead>
+          <TableHead>Date</TableHead>
+          <TableHead>Ticket price</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody className="flex flex-col w-full gap-4">
+        {events.map((event, index) => {
+          return (
+            <Link href={`/events/${event.id}`} key={index}>
+              <TableRow className="bg-white border rounded-xl flex justify-between items-center py-1">
+                <TableCell className="flex items-center gap-3">
+                  <Image
+                    src={
+                      event.image
+                        ? `https://eventsea.infura-ipfs.io/ipfs/${event.image}`
+                        : "/public/images/default.png"
+                    }
+                    alt={event.title}
+                    width={50}
+                    height={50}
+                  />
+                  {event.title}
+                </TableCell>
                 <TableCell>{event.location.address}</TableCell>
                 <TableCell>{formatEventDate(event.dateTime)}</TableCell>
                 <TableCell>{event.ticketInfo.price}</TableCell>
               </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+            </Link>
+          );
+        })}
+      </TableBody>
+    </Table>
   );
 };
 
