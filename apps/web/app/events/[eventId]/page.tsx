@@ -51,7 +51,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
         <Image
           src={
             image
-              ? "https://eventsea.infura-ipfs.io/ipfs/${image}"
+              ? `https://eventsea.infura-ipfs.io/ipfs/${image}`
               : "/images/default.png"
           }
           alt={title}
