@@ -75,7 +75,7 @@ export default async function Page(): Promise<JSX.Element> {
   const events = (await Promise.all(eventsPromises)) as EventSea.Event[];
 
   return (
-    <main className="space-y-6">
+    <main className="space-y-6 px-10">
       <FeaturedEvents events={events} />
       {events.length > 0 && <ForYou events={events} />}
     </main>
