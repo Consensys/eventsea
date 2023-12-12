@@ -10,7 +10,7 @@ export default async function Page(): Promise<JSX.Element> {
   console.log(events);
 
   return (
-    <main className="space-y-6 px-10">
+    <main className="space-y-6 md:px-10">
       <FeaturedEvents events={events} />
       {events.length > 0 && <ForYou events={events} />}
     </main>
