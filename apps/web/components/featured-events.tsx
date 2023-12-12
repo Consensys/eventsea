@@ -28,12 +28,12 @@ export default async function FeaturedEvents({ events }: FeaturedEventsProps) {
             key={event.id}
             className="relative flex flex-col aspect-square group"
           >
-            <div className="h-full overflow-hidden transition-transform duration-300 ease-in-out origin-top rounded-lg group-hover:scale-y-95 group-hover:scale-x-105">
+            <div className="h-full overflow-hidden transition-transform duration-300 ease-in-out origin-top rounded-lg group-hover:scale-x-105">
               <Image
                 src={
                   event.image
                     ? `https://eventsea.infura-ipfs.io/ipfs/${event.image}`
-                    : "/public/images/default.png"
+                    : "/images/default.png"
                 }
                 alt={event.title}
                 objectFit="cover"
