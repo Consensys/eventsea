@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/Table";
 import Image from "next/image";
 import Link from "next/link";
+import { formatEther } from "ethers";
 
 type Props = {
   events: EventSea.Event[];
@@ -57,9 +58,11 @@ const ForYou: React.FC<Props> = ({ events }) => {
                 </TableCell>
                 <TableCell>{event.location.address}</TableCell>
                 <TableCell>{formatEventDate(event.dateTime)}</TableCell>
-                <TableCell>{formatEther(event.ticketInfo.price)} ETH</TableCell>
-              </TableRow>
-            </Link>
+                <TableCell>
+                  {formatEther(BigInt(event.ticketInfo.price).toString())} ETH
+                </TableCell>
+              </Link>
+            </TableRow>
           );
         })}
       </TableBody>
