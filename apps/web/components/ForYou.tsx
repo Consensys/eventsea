@@ -25,24 +25,28 @@ const ForYou: React.FC<Props> = ({ events }) => {
     <Table>
       <TableCaption>Events for you</TableCaption>
       <TableHeader className="[&_tr]:border-0">
-        <TableRow className="flex justify-between hover:bg-transparent">
+        <TableRow className="grid grid-cols-4 hover:bg-transparent">
           <TableHead>Title</TableHead>
           <TableHead>Location</TableHead>
           <TableHead>Date</TableHead>
           <TableHead>Ticket price</TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody className="flex flex-col w-full gap-4">
+      <TableBody className="space-y-4">
         {events.map((event, index) => {
           return (
-            <Link href={`/events/${event.id}`} key={index}>
-              <TableRow className="bg-white border rounded-xl flex justify-between items-center py-1">
+            <TableRow className="flex flex-col border-b-0">
+              <Link
+                className="bg-white border grid grid-cols-4 items-center rounded-xl py-1 hover:bg-opacity-50 duration-100"
+                href={`/events/${event.id}`}
+                key={index}
+              >
                 <TableCell className="flex items-center gap-3">
                   <Image
                     src={
                       event.image
                         ? `https://eventsea.infura-ipfs.io/ipfs/${event.image}`
-                        : "/public/images/default.png"
+                        : "/images/default-thumb.png"
                     }
                     alt={event.title}
                     width={50}
@@ -53,8 +57,8 @@ const ForYou: React.FC<Props> = ({ events }) => {
                 <TableCell>{event.location.address}</TableCell>
                 <TableCell>{formatEventDate(event.dateTime)}</TableCell>
                 <TableCell>{event.ticketInfo.price}</TableCell>
-              </TableRow>
-            </Link>
+              </Link>
+            </TableRow>
           );
         })}
       </TableBody>
