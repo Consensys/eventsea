@@ -33,32 +33,39 @@ const ForYou: React.FC<Props> = ({ events }) => {
           <TableHead>Ticket price</TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody className="space-y-4">
+      <TableBody className="md:space-y-4">
         {events.map((event, index) => {
           return (
-            <TableRow className="flex flex-col border-b-0">
+            <TableRow className="md:flex md:flex-col md:border-b-0">
               <Link
-                className="bg-white border grid grid-cols-4 items-center rounded-xl py-1 hover:bg-opacity-50 duration-100"
+                className="bg-white md:border grid grid-cols-4 items-center md:rounded-xl py-1 hover:bg-opacity-50 duration-100"
                 href={`/events/${event.id}`}
                 key={index}
               >
-                <TableCell className="flex items-center gap-3">
+                <TableCell className="flex items-center gap-3 px-2 md:p-4">
                   <Image
                     src={
                       event.image
                         ? `https://eventsea.infura-ipfs.io/ipfs/${event.image}`
                         : "/images/default-thumb.png"
                     }
+                    className="hidden md:block"
                     alt={event.title}
                     width={50}
                     height={50}
                   />
                   {event.title}
                 </TableCell>
-                <TableCell>{event.location.address}</TableCell>
-                <TableCell>{formatEventDate(event.dateTime)}</TableCell>
-                <TableCell>
-                  {formatEther(BigInt(event.ticketInfo.price).toString())} ETH
+                <TableCell className="px-2 md:p-4">
+                  {event.location.address}
+                </TableCell>
+                <TableCell className="px-2 md:p-4">
+                  {formatEventDate(event.dateTime)}
+                </TableCell>
+                <TableCell className="px-0">
+                  {`${formatEther(
+                    BigInt(event.ticketInfo.price).toString()
+                  )} ETH`}
                 </TableCell>
               </Link>
             </TableRow>
