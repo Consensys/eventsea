@@ -5,7 +5,6 @@ import { getEventContract } from "@/lib/getEventContract";
 import { format } from "date-fns";
 import { getTicketContract } from "@/lib/getTicketContract";
 import { ContractPermission } from "@/types";
-import { addImg, addTokenMetadata } from "@/lib/ipfs";
 import EventLocationMap from "@/components/event-location-map";
 
 type PageProps = {
@@ -47,26 +46,18 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
   const formattedDate = format(new Date(Number(date) * 1000), "MMM. d");
 
   return (
-    <div className="py-6 lg:px-16 flex flex-col items-center gap-10 rounded-md mb-8">
-      <div className="absolute top-0 z-[-1]">
-        <Image
-          src="/green-bg.webp"
-          width={1350}
-          height={522.24}
-          quality={100}
-          className="mx-auto"
-          alt="Background image"
-        />
-      </div>
+    <div className="w-full">
       <div className="relative w-full h-[450px] rounded-md mb-4 overflow-hidden">
-        {image && (
-          <Image
-            src={`https://eventsea.infura-ipfs.io/ipfs/${image}`}
-            alt={title}
-            layout="fill"
-            objectFit="cover"
-          />
-        )}
+        <Image
+          src={
+            image
+              ? "https://eventsea.infura-ipfs.io/ipfs/${image}"
+              : "/images/default.png"
+          }
+          alt={title}
+          layout="fill"
+          objectFit="cover"
+        />
       </div>
 
       <div className="relative grid md:grid-cols-2 justify-items-center w-full gap-10">
