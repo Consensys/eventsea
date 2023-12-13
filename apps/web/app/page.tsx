@@ -16,7 +16,7 @@ export default async function Page(): Promise<JSX.Element> {
     permission: ContractPermission.READ,
   });
 
-  const eventAddresses = (await eventsFactory.getEvents());
+  const eventAddresses = await eventsFactory.getEvents();
 
   const eventsPromises = eventAddresses.map(async (address) => {
     const eventContract = await getEventContract({
@@ -77,7 +77,12 @@ export default async function Page(): Promise<JSX.Element> {
   return (
     <main className="space-y-6 md:px-10">
       <FeaturedEvents events={events.reverse().slice(0, 8)} />
-      {events.length > 0 && <ForYou events={events} />}
+      <section>
+        <h2 className="text-[#09090B] font-semibold text-[28px] mb-4">
+          Events for you
+        </h2>
+        {events.length > 0 && <ForYou events={events} />}
+      </section>
     </main>
   );
 }
