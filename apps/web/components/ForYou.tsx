@@ -42,7 +42,7 @@ const ForYou: React.FC<Props> = ({ events }) => {
                 href={`/events/${event.id}`}
                 key={index}
               >
-                <TableCell className="flex items-center gap-3 px-2 md:p-4">
+                <div className="flex items-center gap-3 px-2 md:p-4">
                   <Image
                     src={
                       event.image
@@ -55,18 +55,18 @@ const ForYou: React.FC<Props> = ({ events }) => {
                     height={50}
                   />
                   {event.title}
-                </TableCell>
-                <TableCell className="px-2 md:p-4">
+                </div>
+                <div className="px-2 md:p-4">
                   {event.location.address}
-                </TableCell>
-                <TableCell className="px-2 md:p-4">
+                </div>
+                <div className="px-2 md:p-4">
                   {formatEventDate(event.dateTime)}
-                </TableCell>
-                <TableCell className="px-0">
+                </div>
+                <div className="px-0">
                   {`${formatEther(
                     BigInt(event.ticketInfo.price).toString()
                   )} ETH`}
-                </TableCell>
+                </div>
               </Link>
             </TableRow>
           );

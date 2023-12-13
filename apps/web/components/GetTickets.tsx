@@ -104,8 +104,8 @@ const GetTickets: React.FC<GetTicketsProps> = ({
           <div className="flex">
             <button
               onClick={handleDecrement}
-              className="px-4 py-1 bg-gray-200 rounded-xl focus:outline-none"
-              disabled={numberOfTickets <= 1}
+              className={`${numberOfTickets < 1 && "cursor-not-allowed opacity-30"} px-4 py-1 bg-gray-200 rounded-xl focus:outline-none`}
+              disabled={numberOfTickets < 1}
             >
               -
             </button>
