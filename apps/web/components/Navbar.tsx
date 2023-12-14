@@ -29,9 +29,9 @@ const switchEthereumChain = async () => {
 };
 
 export const ConnectWalletButton = () => {
-  const { sdk, connected, connecting, account, chainId } = useSDK();
+  const { sdk, connected, connecting, account } = useSDK();
 
-  const isOnLineaTestnet = chainId && chainId === LINEA_TESTNET_CHAIN;
+  const isOnLineaTestnet = window?.ethereum?.chainId === LINEA_TESTNET_CHAIN;
 
   const connect = async () => {
     try {
@@ -56,12 +56,12 @@ export const ConnectWalletButton = () => {
               <Button variant="primary">{formatAddress(account)}</Button>
             </PopoverTrigger>
             <PopoverContent className="right-0 z-10 mt-2 bg-white border rounded-md shadow-lg w-44 top-10">
-              <button className="block w-full py-2 pl-2 pr-4 text-left hover:bg-gray-200">
+              {/* <button className="block w-full py-2 pl-2 pr-4 text-left hover:bg-gray-200">
                 My Events
               </button>
               <button className="block w-full py-2 pl-2 pr-4 text-left hover:bg-gray-200">
                 Wallet Details
-              </button>
+              </button> */}
               <button
                 onClick={disconnect}
                 className="block w-full pl-2 pr-4 py-2 text-left text-[#F05252] hover:bg-gray-200"

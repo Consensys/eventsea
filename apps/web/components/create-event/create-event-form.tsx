@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition } from "react";
+import { FC, useState, useTransition } from "react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useSDK } from "@metamask/sdk-react";
@@ -29,6 +29,7 @@ import Step2 from "./step-2";
 import Step3 from "./step-3";
 
 const NUM_OF_STEPS = 3;
+const LINEA_TESTNET_CHAIN = "0xe704";
 
 const CreateEventForm = () => {
   const [step, setStep] = useState(1);
@@ -36,7 +37,8 @@ const CreateEventForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const { connected } = useSDK();
+  const { connected } = useSDK()
+  const isOnLineaTestnet = window?.ethereum?.chainId === LINEA_TESTNET_CHAIN;
 
   const router = useRouter();
 
@@ -144,7 +146,7 @@ const CreateEventForm = () => {
       }}
     >
       <DialogTrigger asChild>
-        {connected && (
+        {connected && isOnLineaTestnet && (
           <Button variant="outline" type="button">
             <span className="hidden md:block">Create event</span>
             <span className="block md:hidden">Create</span>
