@@ -87,6 +87,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
           }
         )
       ).wait();
+      console.log(await token);
     } catch (e) {
       console.log(e);
     }
