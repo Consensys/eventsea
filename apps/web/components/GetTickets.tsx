@@ -87,7 +87,6 @@ const GetTickets: React.FC<GetTicketsProps> = ({
           }
         )
       ).wait();
-      console.log(await token, " Minted");
     } catch (e) {
       console.log(e);
     }

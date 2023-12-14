@@ -37,7 +37,7 @@ const ForYou: React.FC<Props> = ({ events }) => {
         {events.map((event, index) => {
           return (
             <TableRow className="md:flex md:flex-col md:border-b-0">
-              <TableCell>
+              <TableCell className="p-0">
                 <Link
                   className="grid items-center grid-cols-4 py-1 duration-100 bg-white md:border md:rounded-xl hover:bg-opacity-50"
                   href={`/events/${event.id}`}
@@ -61,7 +61,7 @@ const ForYou: React.FC<Props> = ({ events }) => {
                   <div className="px-2 md:p-4">
                     {formatEventDate(event.dateTime)}
                   </div>
-                  <div className="px-0">
+                  <div className="px-0 md:px-4">
                     {`${formatEther(
                       BigInt(event.ticketInfo.price).toString()
                     )} ETH`}
