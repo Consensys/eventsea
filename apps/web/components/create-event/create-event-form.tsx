@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState, useTransition } from "react";
+import { FC, useEffect, useState, useTransition } from "react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useSDK } from "@metamask/sdk-react";
@@ -36,9 +36,16 @@ const CreateEventForm = () => {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [chainId, setChainId] = useState<string | null>(null);
 
-  const { connected } = useSDK()
-  const isOnLineaTestnet = window?.ethereum?.chainId === LINEA_TESTNET_CHAIN;
+  useEffect(() => {
+    if (window?.ethereum?.chainId) {
+      setChainId(window?.ethereum?.chainId);
+    }
+  }, []);
+
+  const { connected } = useSDK();
+  const isOnLineaTestnet = chainId === LINEA_TESTNET_CHAIN;
 
   const router = useRouter();
 
