@@ -76,7 +76,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
     }
     try {
       const { Hash } = await handleUploadSVG();
-      const totalAmount = ticketPrice * BigInt(numberOfTickets);
+      const totalAmount = Number(ticketPrice) * numberOfTickets;
       console.log("Ticket: ", `https://ipfs.io/ipfs/${Hash}`);
       const token = (
         await nftContract.mint(
