@@ -11,7 +11,7 @@ export const getEvents = async (query: string = "") => {
       permission: ContractPermission.READ,
     });
 
-    const eventAddresses = (await eventsFactory.getEvents()).slice(0, 8);
+    const eventAddresses = (await eventsFactory.getEvents());
 
     const eventsPromises = eventAddresses.map(async (address) => {
       const eventContract = await getEventContract({
@@ -58,7 +58,7 @@ export const getEvents = async (query: string = "") => {
           address: (await getLocationDetails(location))?.name,
         },
         ticketInfo: {
-          price: ticketPrice,
+          price: Number(ticketPrice),
           name: ticketName,
         },
         eventType,

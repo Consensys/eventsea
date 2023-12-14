@@ -34,7 +34,7 @@ export namespace EventSea {
 
   interface TicketTier {
     name: string;
-    price: bigint;
+    price: number;
     availableTickets?: number;
   }
 
