@@ -77,6 +77,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
     try {
       const { Hash } = await handleUploadSVG();
       const totalAmount = ticketPrice * BigInt(numberOfTickets);
+      console.log("Ticket: ", `https://ipfs.io/ipfs/${Hash}`);
       const token = (
         await nftContract.mint(
           numberOfTickets,
@@ -104,7 +105,9 @@ const GetTickets: React.FC<GetTicketsProps> = ({
           <div className="flex">
             <button
               onClick={handleDecrement}
-              className={`${numberOfTickets < 1 && "cursor-not-allowed opacity-30"} px-4 py-1 bg-gray-200 rounded-xl focus:outline-none`}
+              className={`${
+                numberOfTickets < 1 && "cursor-not-allowed opacity-30"
+              } px-4 py-1 bg-gray-200 rounded-xl focus:outline-none`}
               disabled={numberOfTickets < 1}
             >
               -
