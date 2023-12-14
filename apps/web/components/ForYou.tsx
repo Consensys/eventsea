@@ -6,6 +6,7 @@ import {
   TableBody,
   TableCaption,
   TableHead,
+  TableCell,
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
@@ -36,37 +37,37 @@ const ForYou: React.FC<Props> = ({ events }) => {
         {events.map((event, index) => {
           return (
             <TableRow className="md:flex md:flex-col md:border-b-0">
-              <Link
-                className="grid items-center grid-cols-4 py-1 duration-100 bg-white md:border md:rounded-xl hover:bg-opacity-50"
-                href={`/events/${event.id}`}
-                key={index}
-              >
-                <div className="flex items-center gap-3 px-2 md:p-4">
-                  <Image
-                    src={
-                      event.image
-                        ? `https://eventsea.infura-ipfs.io/ipfs/${event.image}`
-                        : "/images/default-thumb.png"
-                    }
-                    className="hidden md:block"
-                    alt={event.title}
-                    width={50}
-                    height={50}
-                  />
-                  {event.title}
-                </div>
-                <div className="px-2 md:p-4">
-                  {event.location.address}
-                </div>
-                <div className="px-2 md:p-4">
-                  {formatEventDate(event.dateTime)}
-                </div>
-                <div className="px-0">
-                  {`${formatEther(
-                    BigInt(event.ticketInfo.price).toString()
-                  )} ETH`}
-                </div>
-              </Link>
+              <TableCell>
+                <Link
+                  className="grid items-center grid-cols-4 py-1 duration-100 bg-white md:border md:rounded-xl hover:bg-opacity-50"
+                  href={`/events/${event.id}`}
+                  key={index}
+                >
+                  <div className="flex items-center gap-3 px-2 md:p-4">
+                    <Image
+                      src={
+                        event.image
+                          ? `https://eventsea.infura-ipfs.io/ipfs/${event.image}`
+                          : "/images/default-thumb.png"
+                      }
+                      className="hidden md:block"
+                      alt={event.title}
+                      width={50}
+                      height={50}
+                    />
+                    {event.title}
+                  </div>
+                  <div className="px-2 md:p-4">{event.location.address}</div>
+                  <div className="px-2 md:p-4">
+                    {formatEventDate(event.dateTime)}
+                  </div>
+                  <div className="px-0">
+                    {`${formatEther(
+                      BigInt(event.ticketInfo.price).toString()
+                    )} ETH`}
+                  </div>
+                </Link>
+              </TableCell>
             </TableRow>
           );
         })}
