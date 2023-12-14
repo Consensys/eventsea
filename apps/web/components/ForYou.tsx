@@ -1,11 +1,9 @@
 import { EventSea } from "@/types";
-import { formatEther } from "ethers";
 import { format } from "date-fns";
 import {
   Table,
   TableBody,
   TableCaption,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -57,9 +55,7 @@ const ForYou: React.FC<Props> = ({ events }) => {
                   />
                   {event.title}
                 </div>
-                <div className="px-2 md:p-4">
-                  {event.location.address}
-                </div>
+                <div className="px-2 md:p-4">{event.location.address}</div>
                 <div className="px-2 md:p-4">
                   {formatEventDate(event.dateTime)}
                 </div>
