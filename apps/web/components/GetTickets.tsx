@@ -7,14 +7,15 @@ import { ContractPermission } from "@/types";
 
 import { GasFeeCard } from "./GasFeeCard";
 import MetaMaskProvider from "@/providers/MetamaskProvider";
-import { addImg, addTokenMetadata } from "@/lib/ipfs";
-import { formatEther, parseEther } from "ethers";
+import { addTokenMetadata } from "@/lib/ipfs";
+import { formatEther } from "ethers";
 
 interface GetTicketsProps {
   ticketPrice: bigint;
   ticketNFT: string;
   title: string;
   date: bigint;
+  ticketId: bigint;
 }
 
 const GetTickets: React.FC<GetTicketsProps> = ({
@@ -22,38 +23,37 @@ const GetTickets: React.FC<GetTicketsProps> = ({
   ticketNFT,
   title,
   date,
+  ticketId,
 }) => {
   const [numberOfTickets, setNumberOfTickets] = useState(0);
 
   const handleUploadSVG = async () => {
-    const svgIPFS = await addImg(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
-        <text x="150" y="125" font-size="40" fill="black">
-          ${title}
-        </text>
-        <text x="150" y="170" font-size="20" fill="black">
-          ${date}
-        </text>
-        <text x="150" y="215" font-size="20" fill="black">
-          ${location}
-        </text>
-      </svg>
-  `);
-
     const tokenMetadata = {
       name: title,
-      description: `Ticket for ${title} on ${Number(date)}`,
-      image: `https://ipfs.io/ipfs/${svgIPFS.Hash}`,
-      attributes: [
-        {
-          trait_type: "Ticket ID",
-          value: 1,
-        },
-      ],
+      keyvalues: {
+        description: `Ticket for ${title} on ${Number(date)}`,
+        image: `
+        <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+          <text x="150" y="125" font-size="40" fill="black">
+            ${title}
+          </text>
+          <text x="150" y="170" font-size="20" fill="black">
+            ${date}
+          </text>
+          <text x="150" y="215" font-size="20" fill="black">
+            ${ticketId}
+          </text>
+        </svg>`,
+        attributes: [
+          {
+            trait_type: "Ticket ID",
+            value: Number(ticketId),
+          },
+        ],
+      },
     };
 
     const metadataHash = await addTokenMetadata(tokenMetadata);
-
     return metadataHash;
   };
 
@@ -65,7 +65,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
     setNumberOfTickets((prevCount) => prevCount - 1);
   };
 
-  const handleGetTickets = async () => {
+  const handleMinTickets = async () => {
     const nftContract = await getTicketContract({
       address: ticketNFT,
       permission: ContractPermission.WRITE,
@@ -75,7 +75,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
       return;
     }
     try {
-      const { Hash } = await handleUploadSVG();
+      const Hash = await handleUploadSVG();
       const totalAmount = ticketPrice * BigInt(numberOfTickets);
       const token = (
         await nftContract.mint(
@@ -86,6 +86,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
           }
         )
       ).wait();
+      console.log(await token);
     } catch (e) {
       console.log(e);
     }
@@ -103,7 +104,9 @@ const GetTickets: React.FC<GetTicketsProps> = ({
           <div className="flex">
             <button
               onClick={handleDecrement}
-              className={`${numberOfTickets < 1 && "cursor-not-allowed opacity-30"} px-4 py-1 bg-gray-200 rounded-xl focus:outline-none`}
+              className={`${
+                numberOfTickets < 1 && "cursor-not-allowed opacity-30"
+              } px-4 py-1 bg-gray-200 rounded-xl focus:outline-none`}
               disabled={numberOfTickets < 1}
             >
               -
@@ -128,12 +131,12 @@ const GetTickets: React.FC<GetTicketsProps> = ({
         </div>
         <div className="flex items-center justify-between mb-4">
           <span className="text-gray-600">Gas fee</span>
-          <GasFeeCard />
+          {/* <GasFeeCard /> */}
         </div>
         <Button
           variant="primary"
           className="w-full text-[#0C200A] p-2 rounded focus:outline-none "
-          onClick={async () => await handleGetTickets()}
+          onClick={async () => await handleMinTickets()}
         >
           Get tickets
         </Button>

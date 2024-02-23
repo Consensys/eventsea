@@ -10,7 +10,7 @@ module.exports = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "eventsea.infura-ipfs.io",
+        hostname: "brown-secondary-tiglon-822.mypinata.cloud",
         port: "",
         pathname: "/**",
       },

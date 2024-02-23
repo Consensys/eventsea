@@ -1,12 +1,8 @@
 "use server";
 
-let baseUrl = `${process.env["INFURA_IPFS_ENDPOINT"]}/api/v0/add`;
-
-const generateSVG = (svg: string) => {
-  const svgBlob = new Blob([svg], { type: "image/svg+xml" });
-  const svgUrl = URL.createObjectURL(svgBlob);
-  return svgUrl;
-};
+let baseUrl = `${process.env["PINATA_IPFS_ENDPOINT"]}/pinning/pinFileToIPFS`;
+let jsonBaseUrl = `${process.env["PINATA_IPFS_ENDPOINT"]}/pinning/pinJSONToIPFS`;
+const JWT = process.env["PINATA_API_KEY"];
 
 export const getSVGFromBlobUrl = async (blobUrl: string) => {
   try {
@@ -23,57 +19,27 @@ export const getSVGFromBlobUrl = async (blobUrl: string) => {
   }
 };
 
-export const addImg = async (image: string) => {
-  const formData = new FormData();
-  const svg = generateSVG(image);
-
-  formData.append("file", svg);
-
-  try {
-    const res = await fetch(baseUrl, {
-      method: "POST",
-      headers: {
-        Authorization:
-          "Basic " +
-          Buffer.from(
-            process.env.INFURA_API_KEY + ":" + process.env.INFURA_API_SECRET
-          ).toString("base64"),
-      },
-      body: formData,
-    });
-    const json = await res.json();
-    return json;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 type Metadata = {
   name: string;
-  description: string;
-  image: string;
-  attributes: {
-    trait_type: string;
-    value: number;
-  }[];
+  keyvalues: {
+    description: string;
+    image: string;
+    attributes: {
+      trait_type: string;
+      value: number;
+    }[];
+  };
 };
 
 export const addTokenMetadata = async (metadata: Metadata) => {
-  const formData = new FormData();
-  formData.append("file", JSON.stringify(metadata));
   try {
-    const res = await fetch(baseUrl, {
+    const res = await fetch(jsonBaseUrl, {
       method: "POST",
       headers: {
-        Authorization:
-          "Basic " +
-          Buffer.from(
-            process.env["INFURA_API_KEY"] +
-              ":" +
-              process.env["INFURA_API_SECRET"]
-          ).toString("base64"),
+        Authorization: `Bearer ${JWT}`,
+        "Content-Type": "application/json",
       },
-      body: formData,
+      body: JSON.stringify(metadata),
     });
     const json = await res.json();
     return json;
@@ -95,24 +61,18 @@ type AddOptions =
     };
 
 export const add = async (data: FormData) => {
-  let baseUrl = `https://ipfs.infura.io:5001/api/v0/add`;
-
   try {
     const response = await fetch(baseUrl, {
       method: "POST",
       headers: {
-        Authorization:
-          "Basic " +
-          Buffer.from(
-            process.env["INFURA_API_KEY"] +
-              ":" +
-              process.env["INFURA_API_SECRET"]
-          ).toString("base64"),
+        Authorization: `Bearer ${JWT}`,
       },
       body: data,
     });
-
-    return (await response.json()).Hash;
+    if (!response.ok) {
+      throw new Error("Error adding file");
+    }
+    return (await response.json()).IpfsHash as string;
   } catch (error) {
     console.error("Error adding file", error);
   }
