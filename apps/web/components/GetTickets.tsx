@@ -82,7 +82,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
           numberOfTickets,
           `https://ipfs.io/ipfs/${Hash}`,
           {
-            value: parseEther(totalAmount.toString()),
+            value: totalAmount.toString(),
           }
         )
       ).wait();
