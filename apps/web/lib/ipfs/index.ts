@@ -78,24 +78,6 @@ export const add = async (data: FormData) => {
   }
 };
 
-export const cat = async (hash: string) => {
-  const response = await fetch(
-    `${process.env.INFURA_IPFS_ENDPOINT}/api/v0/cat?arg=${hash}`,
-    {
-      method: "POST",
-      headers: {
-        Authorization:
-          "Basic " +
-          Buffer.from(
-            process.env.INFURA_API_KEY + ":" + process.env.INFURA_API_SECRET
-          ).toString("base64"),
-      },
-    }
-  );
-
-  return await response.json();
-};
-
 export const getDirectoryContent = async (hash: string): Promise<string[]> => {
   const dirResponse = await fetch(`https://dweb.link/api/v0/ls?arg=${hash}`);
 
