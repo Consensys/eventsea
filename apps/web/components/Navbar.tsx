@@ -40,6 +40,7 @@ export const ConnectWalletButton = () => {
   }, []);
 
   const isOnLineaTestnet = chainId === LINEA_TESTNET_CHAIN;
+  const isOnLocal = chainId === "0x7a69";
 
   const connect = async () => {
     try {
@@ -58,7 +59,7 @@ export const ConnectWalletButton = () => {
   return (
     <div className="relative">
       {connected ? (
-        isOnLineaTestnet ? (
+        isOnLineaTestnet || isOnLocal ? (
           <Popover>
             <PopoverTrigger>
               <Button variant="primary">{formatAddress(account)}</Button>
