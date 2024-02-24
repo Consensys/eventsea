@@ -6,11 +6,11 @@
     "deploy:local": "turbo run deploy:local",
     "compile": "turbo run compile",
     "dev": "turbo run dev",
+    "blockchain": "turbo run blockchain",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-ethers": "^3.0.4",
     "eslint": "^8.48.0",
     "prettier": "^3.0.3",
     "tsconfig": "*",
@@ -22,7 +22,5 @@
     "apps/*",
     "packages/*"
   ],
-  "dependencies": {
-    "@openzeppelin/contracts": "^5.0.1"
-  }
+  "dependencies": {}
 }
