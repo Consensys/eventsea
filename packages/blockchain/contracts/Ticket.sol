@@ -3,7 +3,6 @@ pragma solidity ^0.8.13;
 
 import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
 contract Ticket is ERC721URIStorage, Ownable(tx.origin), Pausable {
@@ -12,6 +11,8 @@ contract Ticket is ERC721URIStorage, Ownable(tx.origin), Pausable {
     address public eventOwner;
     uint256 public tokenId = 0;
     uint public _ticketPrice = 0.001 ether;
+    // token of owner by index
+
 
     event PermanentURI(string _value, uint256 indexed _id, address indexed _to);
     event TicketMinted(address indexed _to, uint256 indexed _tokenId);

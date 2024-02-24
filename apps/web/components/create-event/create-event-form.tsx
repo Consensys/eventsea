@@ -1,5 +1,6 @@
 "use client";
-import { FC, useEffect, useState, useTransition } from "react";
+
+import { useEffect, useState, useTransition } from "react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useSDK } from "@metamask/sdk-react";
@@ -46,6 +47,7 @@ const CreateEventForm = () => {
 
   const { connected } = useSDK();
   const isOnLineaTestnet = chainId === LINEA_TESTNET_CHAIN;
+  const isOnLocal = chainId === "0x7a69";
 
   const router = useRouter();
 
@@ -153,12 +155,13 @@ const CreateEventForm = () => {
       }}
     >
       <DialogTrigger asChild>
-        {connected && isOnLineaTestnet && (
-          <Button variant="outline" type="button">
-            <span className="hidden md:block">Create event</span>
-            <span className="block md:hidden">Create</span>
-          </Button>
-        )}
+        {(connected && isOnLineaTestnet) ||
+          (isOnLocal && (
+            <Button variant="outline" type="button">
+              <span className="hidden md:block">Create event</span>
+              <span className="block md:hidden">Create</span>
+            </Button>
+          ))}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
         <Form {...form}>
