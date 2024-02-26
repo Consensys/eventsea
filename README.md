@@ -18,19 +18,6 @@ EventSea is a decentralized events platform for events organizers and attendees.
   Participants can mint their own tickets, ensuring authenticity and reducing the risk of counterfeit tickets.
   Each ticket is a unique digital asset on the blockchain, providing traceability and security.
 
-##### RoadMap:
-
-- Adding Ticket Validation:
-  EventSea will offer built-in ticket validation mechanisms, ensuring that each ticket is genuine and corresponds to a legitimate purchase.
-  Attendees can confidently attend events knowing their tickets are valid and recognized by the platform.
-
-#### Benefits:
-
-- Transparency: Every transaction, from event creation to ticket minting, is recorded on the blockchain, ensuring complete transparency and trustworthiness.
-
-- Security: Leveraging the power of blockchain technology, EventSea ensures that all events and tickets are secure from fraud and unauthorized changes.
-- User Empowerment: EventSea empowers users to take control of their events, from creation to ticketing, without relying on third-party platforms or agencies.
-
 ### Apps and Packages
 
 - `blockchain`: Contracts
@@ -49,30 +36,43 @@ This Turborepo has some additional tools already setup for you:
 - [ESLint](https://eslint.org/) for code linting
 - [Prettier](https://prettier.io) for code formatting
 
-### Running locally
+### Walkthrough
 
-The front end accesses the deployed smart contract `EventFactory` via
+You can find a detailed walkthrough with all the prerequisites [here](https://mirror.xyz/emjlin.eth/iNg_5mQCh-k3aLd9tQAUGGxgsMazoo-5E2qrrNNaUJs).
+
+### Deploying locally
+
+First off, make sure you've added all the relevant environment variables in `.env.example` and changed it to a pure `.env`.
+
+The front end accesses the deployed smart contract `EventsFactory` via
 `NEXT_PUBLIC_EVENTS_FACTORY_CONTRACT_ADDRESS` environment variable
 
-The command below will start the nextjs app and run a local foundry node
-
-```
-npm run dev
-```
-
-Then you have to compile the contracts. Run this command
-
-```
-npm run compile
-```
-
-If you wish to deploy it to the local anvil run the below command in a different terminal
+To deploy your smart contract locally, first start a local test chain by running:
 
 ```
 npm run blockchain
 ```
 
-In order to deploy it to linea testnet after the compile step
+Then, use one of the private keys provided by the local test chain and use it for `ACCOUNT_PRIVATE_KEY` in the `.env` file under `packages/blockchain`.
+
+To actually compile deploy, open a new terminal and run:
+
+```
+npm run compile
+npm run deploy:local
+```
+
+Use that contract address for `NEXT_PUBLIC_EVENTS_FACTORY_CONTRACT_ADDRESS`.
+
+The command below will start the nextjs app
+
+```
+npm run dev
+```
+
+### Deploying to Linea
+
+In order to deploy it to linea testnet after the compile step, simply run:
 
 ```
 npm run deploy:test
