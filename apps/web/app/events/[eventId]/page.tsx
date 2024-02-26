@@ -43,6 +43,8 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
 
   const ticketPrice = await ticketContract._ticketPrice();
 
+  const ticketId = await ticketContract.tokenId();
+
   const formattedDate = format(new Date(Number(date) * 1000), "MMM. d");
 
   return (
@@ -51,7 +53,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
         <Image
           src={
             image
-              ? `https://eventsea.infura-ipfs.io/ipfs/${image}`
+              ? `https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${image}`
               : "/images/default.png"
           }
           alt={title}
@@ -90,6 +92,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
             ticketNFT={ticketNFT}
             title={title}
             date={date}
+            ticketId={ticketId}
           />
         </div>
       </div>

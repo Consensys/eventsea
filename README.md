@@ -54,7 +54,7 @@ This Turborepo has some additional tools already setup for you:
 The front end accesses the deployed smart contract `EventFactory` via
 `NEXT_PUBLIC_EVENTS_FACTORY_CONTRACT_ADDRESS` environment variable
 
-Below command will start the nextjs app and run a local hardhat node
+The command below will start the nextjs app and run a local foundry node
 
 ```
 npm run dev
@@ -66,13 +66,13 @@ Then you have to compile the contracts. Run this command
 npm run compile
 ```
 
-If you wish to deploy it to the local hardhat node run below command
+If you wish to deploy it to the local anvil run the below command in a different terminal
 
 ```
-npm run deploy:local
+npm run blockchain
 ```
 
-In order to deploy it to linea testnet after compile step
+In order to deploy it to linea testnet after the compile step
 
 ```
 npm run deploy:test

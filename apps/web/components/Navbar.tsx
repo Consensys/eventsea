@@ -17,6 +17,7 @@ import MetaMaskProvider from "@/providers/MetamaskProvider";
 import { useEffect, useState } from "react";
 
 const LINEA_TESTNET_CHAIN = "0xe704";
+const ANVIL_CHAIN = "0x7a69"
 
 const switchEthereumChain = async () => {
   if (!window.ethereum) return;
@@ -40,6 +41,7 @@ export const ConnectWalletButton = () => {
   }, []);
 
   const isOnLineaTestnet = chainId === LINEA_TESTNET_CHAIN;
+  const isOnLocal = chainId === ANVIL_CHAIN;
 
   const connect = async () => {
     try {
@@ -58,7 +60,7 @@ export const ConnectWalletButton = () => {
   return (
     <div className="relative">
       {connected ? (
-        isOnLineaTestnet ? (
+        isOnLineaTestnet || isOnLocal ? (
           <Popover>
             <PopoverTrigger>
               <Button variant="primary">{formatAddress(account)}</Button>
@@ -80,7 +82,7 @@ export const ConnectWalletButton = () => {
           </Popover>
         ) : (
           <Button variant="destructive" onClick={switchEthereumChain}>
-            Swith to linea
+            Switch to linea
           </Button>
         )
       ) : (

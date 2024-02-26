@@ -3,25 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "hardhat node",
-    "compile": "hardhat compile",
-    "deploy:test": "hardhat run --network linea-testnet scripts/deploy.ts ",
-    "deploy:local": "hardhat run --network localhost scripts/deploy.ts "
+    "compile": "forge build && npx typechain --target ethers-v6 \"out/**/!(*.t|test).sol/!(*.abi).json\" --out-dir typechain-types",
+    "deploy:test": "forge script script/EventsFactory.s.sol:Deploy --fork-url linea-testnet --broadcast",
+    "deploy:local": "forge script script/EventsFactory.s.sol:Deploy --fork-url http://localhost:8545 --broadcast",
+    "blockchain": "anvil"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-ethers": "^3.0.4",
-    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
-    "@typechain/ethers-v6": "^0.4.0",
-    "chai": "^4.3.10",
-    "dotenv": "^16.0.3",
-    "erc721a": "^4.2.3",
-    "ethers": "^6.8.1",
-    "hardhat": "^2.18.3",
-    "ts-node": "^10.9.1",
-    "typechain": "^8.3.1"
-  },
-  "dependencies": {
-    "@openzeppelin/contracts": "^5.0.0",
-    "assertion-error": "^2.0.1"
+    "@typechain/ethers-v6": "^0.5.1",
+    "typechain": "^8.3.2"
   }
 }
