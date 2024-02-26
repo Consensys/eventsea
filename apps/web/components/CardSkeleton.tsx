@@ -11,7 +11,7 @@ export const CardSkeleton = ({
     return (
       <div className="animate-pulse bg-gray-200 h-48 w-full rounded-lg">
         <Image
-          src={`https://brown-secondary-tiglon-822.mypinata.cloud/ipfs/${image}`}
+          src={`https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${image}`}
           alt="Event image"
           layout="fill"
           onLoad={() => setIsLoading(false)}

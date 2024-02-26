@@ -47,7 +47,7 @@ const ForYou: React.FC<Props> = ({ events }) => {
                     <Image
                       src={
                         event.image
-                          ? `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/${event.image}`
+                          ? `https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${event.image}`
                           : "/images/default-thumb.png"
                       }
                       className="hidden md:block"

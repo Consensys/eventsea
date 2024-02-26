@@ -131,7 +131,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
         </div>
         <div className="flex items-center justify-between mb-4">
           <span className="text-gray-600">Gas fee</span>
-          <GasFeeCard />
+          {<GasFeeCard />}
         </div>
         <Button
           variant="primary"

@@ -1,0 +1,10 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+
+[rpc_endpoints]
+linea-testnet = "https://linea-goerli.infura.io/v3/${INFURA_API_KEY}"
+linea-mainnet = "https://linea-mainnet.infura.io/v3/${INFURA_API_KEY}"
+
+# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

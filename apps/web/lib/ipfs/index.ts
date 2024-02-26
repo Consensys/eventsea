@@ -2,7 +2,7 @@
 
 let baseUrl = `${process.env["PINATA_IPFS_ENDPOINT"]}/pinning/pinFileToIPFS`;
 let jsonBaseUrl = `${process.env["PINATA_IPFS_ENDPOINT"]}/pinning/pinJSONToIPFS`;
-const JWT = process.env["PINATA_API_KEY"];
+const JWT = process.env["PINATA_JWT"];
 
 export const getSVGFromBlobUrl = async (blobUrl: string) => {
   try {

@@ -9,7 +9,7 @@ module.exports = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "brown-secondary-tiglon-822.mypinata.cloud",
+        hostname: process.env.NEXT_PUBLIC_PINATA_GATEWAY,
         port: "",
         pathname: "/**",
       },

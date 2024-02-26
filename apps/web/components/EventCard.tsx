@@ -25,7 +25,7 @@ export const EventCard = ({ event }: { event: EventSea.Event }) => {
             <Image
               src={
                 event.image
-                  ? `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/${event.image}`
+                  ? `https://${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/ipfs/${event.image}`
                   : "/images/default.png"
               }
               onLoad={() => setIsLoading(false)}
