@@ -155,7 +155,7 @@ const CreateEventForm = () => {
       }}
     >
       <DialogTrigger asChild>
-        {(connected && isOnLineaTestnet) || (
+        {connected && isOnLineaTestnet && (
           <Button variant="outline" type="button">
             <span className="hidden md:block">Create event</span>
             <span className="block md:hidden">Create</span>
