@@ -31,6 +31,7 @@ import Step3 from "./step-3";
 
 const NUM_OF_STEPS = 3;
 const LINEA_TESTNET_CHAIN = "0xe704";
+const ANVIL_CHAIN = "0x7a69"
 
 const CreateEventForm = () => {
   const [step, setStep] = useState(1);
@@ -47,7 +48,7 @@ const CreateEventForm = () => {
 
   const { connected } = useSDK();
   const isOnLineaTestnet = chainId === LINEA_TESTNET_CHAIN;
-  const isOnLocal = chainId === "0x7a69";
+  const isOnLocal = chainId === ANVIL_CHAIN;
 
   const router = useRouter();
 
@@ -155,13 +156,14 @@ const CreateEventForm = () => {
       }}
     >
       <DialogTrigger asChild>
-        {(connected && isOnLineaTestnet) ||
-          (isOnLocal && (
+        {(connected && (isOnLineaTestnet || isOnLocal)) &&
+          (
             <Button variant="outline" type="button">
               <span className="hidden md:block">Create event</span>
               <span className="block md:hidden">Create</span>
             </Button>
-          ))}
+          )
+        }
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
         <Form {...form}>
