@@ -30,7 +30,7 @@ import Step2 from "./step-2";
 import Step3 from "./step-3";
 
 const NUM_OF_STEPS = 3;
-const LINEA_TESTNET_CHAIN = "0xe704";
+const LINEA_TESTNET_CHAIN = "0xe705";
 
 const CreateEventForm = () => {
   const [step, setStep] = useState(1);
@@ -155,13 +155,12 @@ const CreateEventForm = () => {
       }}
     >
       <DialogTrigger asChild>
-        {(connected && isOnLineaTestnet) ||
-          (isOnLocal && (
-            <Button variant="outline" type="button">
-              <span className="hidden md:block">Create event</span>
-              <span className="block md:hidden">Create</span>
-            </Button>
-          ))}
+        {connected && isOnLineaTestnet && (
+          <Button variant="outline" type="button">
+            <span className="hidden md:block">Create event</span>
+            <span className="block md:hidden">Create</span>
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px]">
         <Form {...form}>

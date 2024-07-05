@@ -14,9 +14,8 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import MetaMaskProvider from "@/providers/MetamaskProvider";
-import { useEffect, useState } from "react";
 
-const LINEA_TESTNET_CHAIN = "0xe704";
+const LINEA_TESTNET_CHAIN = "0xe705";
 
 const switchEthereumChain = async () => {
   if (!window.ethereum) return;
@@ -30,17 +29,7 @@ const switchEthereumChain = async () => {
 };
 
 export const ConnectWalletButton = () => {
-  const [chainId, setChainId] = useState<string | null>(null);
-  const { sdk, connected, connecting, account } = useSDK();
-
-  useEffect(() => {
-    if (window?.ethereum?.chainId) {
-      setChainId(window?.ethereum?.chainId);
-    }
-  }, []);
-
-  const isOnLineaTestnet = chainId === LINEA_TESTNET_CHAIN;
-  const isOnLocal = chainId === "0x7a69";
+  const { sdk, connected, connecting, chainId, account } = useSDK();
 
   const connect = async () => {
     try {
@@ -59,7 +48,7 @@ export const ConnectWalletButton = () => {
   return (
     <div className="relative">
       {connected ? (
-        isOnLineaTestnet || isOnLocal ? (
+        chainId === LINEA_TESTNET_CHAIN ? (
           <Popover>
             <PopoverTrigger>
               <Button variant="primary">{formatAddress(account)}</Button>
