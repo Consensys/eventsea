@@ -13,7 +13,7 @@
         "PINATA_API_KEY",
         "NEXT_PUBLIC_PINATA_GATEWAY"
       ],
-      "dependsOn": ["^build", "compile"],
+      "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
     "dev": {
