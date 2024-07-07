@@ -8,7 +8,5 @@
       }
     }
   ],
-  "scripts": {
-    "build": "sh ../../scripts/compile-copy-abi.sh && next build"
-  }
+  "buildCommand": "sh ../../scripts/compile-copy-abi.sh && next build"
 }
