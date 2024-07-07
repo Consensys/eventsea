@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
-import contract from "@blockchain/artifacts/contracts/Ticket.sol/Ticket.json";
-import { Ticket } from "@blockchain/typechain-types/contracts/Ticket";
+import contract from "lib/contracts/Ticket.sol/Ticket.json";
+import { Ticket } from "lib/contracts/typechain-types/contracts/Ticket";
 import { ContractPermission } from "@/types";
 import { getNetworkRPC } from "./utils";
 

@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": {
+        "distDir": ".next"
+      }
+    }
+  ],
+  "scripts": {
+    "build": "sh ../../scripts/compile-copy-abi.sh && next build"
+  }
+}

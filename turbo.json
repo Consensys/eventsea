@@ -27,7 +27,10 @@
       ]
     },
     "compile": {
-      "cache": false
+      "cache": false,
+      "env": [
+        "ACCOUNT_PRIVATE_KEY"
+      ]
     },
     "deploy:test": { 
       "cache": false

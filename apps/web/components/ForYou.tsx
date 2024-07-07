@@ -45,11 +45,7 @@ const ForYou: React.FC<Props> = ({ events }) => {
                 >
                   <div className="flex items-center gap-3 px-2 md:p-4">
                     <Image
-                      src={
-                        event.image
-                          ? `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/${event.image}`
-                          : "/images/default-thumb.png"
-                      }
+                      src={event.image}
                       className="hidden md:block"
                       alt={event.title}
                       width={50}

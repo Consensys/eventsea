@@ -16,7 +16,7 @@ const config: HardhatUserConfig = {
     localhost: {
       chainId: 31337,
       url: "http://127.0.0.1:8545/",
-      accounts: [process.env.ACCOUNT_PRIVATE_KEY],
+      accounts: [process.env.ACCOUNT_PRIVATE_KEY!],
     },
     "linea-testnet": {
       url: `https://linea-sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,

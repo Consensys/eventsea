@@ -53,7 +53,7 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
         <Image
           src={
             image
-              ? `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/${image}`
+              ? `${process.env.PINATA_IPFS_ENDPOINT}/${image}`
               : "/images/default.png"
           }
           alt={title}

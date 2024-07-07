@@ -62,7 +62,9 @@ export const getEvents = async (query: string = "") => {
           name: ticketName,
         },
         eventType,
-        image,
+        image: image
+          ? `${process.env.PINATA_IPFS_ENDPOINT}/${image}`
+          : "/images/default.png",
         dateTime: Number(date),
       } as EventSea.Event;
     });
@@ -71,8 +73,8 @@ export const getEvents = async (query: string = "") => {
 
     const lowerCaseQuery = query.toLowerCase();
 
-    return events.filter(
-      (event) => event.title?.toLowerCase().includes(lowerCaseQuery)
+    return events.filter((event) =>
+      event.title?.toLowerCase().includes(lowerCaseQuery)
     );
   } catch (error) {
     console.error("Error fetching events:", error);

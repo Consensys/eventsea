@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
-import contract from "@blockchain/artifacts/contracts/EventsFactory.sol/EventsFactory.json";
-import { EventsFactory } from "@blockchain/typechain-types/contracts/EventsFactory";
+import contract from "lib/contracts/artifacts/EventsFactory.sol/EventsFactory.json";
+import { EventsFactory } from "lib/contracts/typechain-types/contracts/EventsFactory";
 import { ContractPermission } from "@/types";
 import { getNetworkRPC } from "./utils";
 
