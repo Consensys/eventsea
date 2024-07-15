@@ -1,6 +1,6 @@
 import { env } from "@/env.mjs";
 
-export async function POST(request: Request, response: Response) {
+export async function POST(request: Request) {
   const data = await request.formData();
   const baseUrl = env.INFURA_IPFS_ENDPOINT;
 
