@@ -17,7 +17,6 @@
         "NEXT_PUBLIC_PINATA_GATEWAY",
         "INFURA_IPFS_ENDPOINT",
         "INFURA_IPFS_GATEWAY",
-        "ACCOUNT_PRIVATE_KEY"
       ],
       "dependsOn": ["//#copy-artifacts"],
       "outputs": ["dist/**", ".next/**"]
@@ -30,13 +29,13 @@
         "INFURA_API_KEY",
         "INFURA_API_SECRET",
         "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY",
-        "NEXT_PUBLIC_PINATA_GATEWAY",
-        "ACCOUNT_PRIVATE_KEY"
+        "NEXT_PUBLIC_PINATA_GATEWAY"
       ],
       "dependsOn": ["//#copy-artifacts"]
     },
     "blockchain#compile": {
-      "outputs": ["packages/blockchain/artifacts/**", "packages/blockchain/typechain-types/**"]
+      "outputs": ["packages/blockchain/artifacts/**", "packages/blockchain/typechain-types/**"],
+      "env": ["ACCOUNT_PRIVATE_KEY"]
     },
     "//#copy-artifacts": {
       "dependsOn": ["blockchain#compile"],
