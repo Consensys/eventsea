@@ -17,7 +17,7 @@ export const CardSkeleton = ({
           onLoad={() => setIsLoading(false)}
           onError={() => setIsLoading(false)}
           className="opacity-0"
-        />
+        /> 
       </div>
     );
   };

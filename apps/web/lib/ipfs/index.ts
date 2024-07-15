@@ -1,8 +1,8 @@
 "use server";
-
-let baseUrl = `${process.env["PINATA_IPFS_ENDPOINT"]}/pinning/pinFileToIPFS`;
-let jsonBaseUrl = `${process.env["PINATA_IPFS_ENDPOINT"]}/pinning/pinJSONToIPFS`;
-const JWT = process.env["PINATA_API_KEY"];
+import { env } from "@/env.mjs";
+let baseUrl = env.INFURA_IPFS_ENDPOINT;
+let jsonBaseUrl = `${env["PINATA_IPFS_ENDPOINT"]}/pinning/pinJSONToIPFS`;
+const JWT = env["PINATA_API_KEY"];
 
 export const getSVGFromBlobUrl = async (blobUrl: string) => {
   try {
@@ -46,42 +46,4 @@ export const addTokenMetadata = async (metadata: Metadata) => {
   } catch (error) {
     console.log(error);
   }
-};
-
-type AddOptions =
-  | {
-      blob: Blob;
-      fileName: string;
-    }
-  | {
-      files: File[];
-    }
-  | {
-      file: File;
-    };
-
-export const add = async (data: FormData) => {
-  try {
-    const response = await fetch(baseUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${JWT}`,
-      },
-      body: data,
-    });
-    if (!response.ok) {
-      throw new Error("Error adding file");
-    }
-    return (await response.json()).IpfsHash as string;
-  } catch (error) {
-    console.error("Error adding file", error);
-  }
-};
-
-export const getDirectoryContent = async (hash: string): Promise<string[]> => {
-  const dirResponse = await fetch(`https://dweb.link/api/v0/ls?arg=${hash}`);
-
-  const directory = await dirResponse.json();
-
-  return directory.Objects[0].Links.map((sc: any) => sc.Hash);
 };

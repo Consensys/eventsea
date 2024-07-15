@@ -1,5 +1,4 @@
-import { getEventContract } from "@/lib/getEventContract";
-import { ContractPermission } from "@/types";
+import { getEventById } from "@/lib/actions";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -12,17 +11,7 @@ export async function generateMetadata({
     return notFound();
   }
 
-  const eventContract = await getEventContract({
-    address: eventId,
-    permission: ContractPermission.READ,
-  });
-
-  const eventData = await Promise.all([
-    eventContract.title(),
-    eventContract.description(),
-  ]);
-
-  const [title, description] = eventData;
+  const { title, description } = await getEventById(eventId);
 
   return {
     title: `${title} - Eventsea`,

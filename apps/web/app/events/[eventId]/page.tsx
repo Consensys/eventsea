@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import GetTickets from "@/components/GetTickets";
 import Image from "next/image";
-import { getEventContract } from "@/lib/getEventContract";
 import { format } from "date-fns";
-import { getTicketContract } from "@/lib/getTicketContract";
-import { ContractPermission } from "@/types";
 import EventLocationMap from "@/components/event-location-map";
+
+import { env } from "@/env.mjs";
+import { getEventById, getTicketById } from "@/lib/actions";
 
 type PageProps = {
   params: {
@@ -18,48 +18,16 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
     return notFound();
   }
 
-  const eventContract = await getEventContract({
-    address: eventId,
-    permission: ContractPermission.READ,
-  });
-
-  const eventData = await Promise.all([
-    eventContract.title(),
-    eventContract.description(),
-    eventContract.location(),
-    eventContract.eventType(),
-    eventContract.image(),
-    eventContract.date(),
-    eventContract.ticketNFT(),
-  ]);
-
-  const [title, description, location, eventType, image, date, ticketNFT] =
-    eventData;
-
-  const ticketContract = await getTicketContract({
-    address: ticketNFT,
-    permission: ContractPermission.READ,
-  });
-
-  const ticketPrice = await ticketContract._ticketPrice();
-
-  const ticketId = await ticketContract.tokenId();
+  const { title, eventType, description, location, date, ticketNFT, image } =
+    await getEventById(eventId);
+  const { id, price } = await getTicketById(ticketNFT);
 
   const formattedDate = format(new Date(Number(date) * 1000), "MMM. d");
 
   return (
     <div className="w-full">
       <div className="relative w-full h-[450px] rounded-md mb-4 overflow-hidden">
-        <Image
-          src={
-            image
-              ? `${process.env.PINATA_IPFS_ENDPOINT}/${image}`
-              : "/images/default.png"
-          }
-          alt={title}
-          layout="fill"
-          objectFit="cover"
-        />
+        <Image src={image} alt={title} layout="fill" objectFit="cover" />
       </div>
 
       <div className="relative grid md:grid-cols-2 justify-items-center w-full gap-10">
@@ -88,11 +56,11 @@ const EventPage = async ({ params: { eventId } }: PageProps) => {
 
         <div className="w-full md:pl-20">
           <GetTickets
-            ticketPrice={ticketPrice}
+            ticketPrice={price}
             ticketNFT={ticketNFT}
             title={title}
             date={date}
-            ticketId={ticketId}
+            ticketId={id}
           />
         </div>
       </div>

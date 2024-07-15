@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { useSDK } from "@metamask/sdk-react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { RotateCw, Plus } from "lucide-react";
-import { parseEther } from "ethers";
+import { ethers, parseEther } from "ethers";
+
+import EventFactoryContract from "lib/contracts/artifacts/EventsFactory.sol/EventsFactory.json";
+import { EventsFactory } from "@/lib/contracts/typechain-types";
 
 import {
   Dialog,
@@ -20,39 +24,30 @@ import {
 import { Button } from "../ui/Button";
 import { Form } from "@/components/ui/form";
 
-import { getEventFactoryContract } from "@/lib/getEventFactoryContract";
-import { add } from "@/lib/ipfs";
 import { formSchema } from "./schema";
-import { ContractPermission, EventSea } from "@/types";
+import {  EventSea } from "@/types";
 
 import Step1 from "./step-1";
 import Step2 from "./step-2";
 import Step3 from "./step-3";
+import { getAppChainId } from "@/lib/utils";
+import { env } from "@/env.mjs";
 
 const NUM_OF_STEPS = 3;
-const LINEA_TESTNET_CHAIN = "0xe705";
 
 const CreateEventForm = () => {
   const [step, setStep] = useState(1);
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isPending, startTransition] = useTransition();
-  const [chainId, setChainId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (window?.ethereum?.chainId) {
-      setChainId(window?.ethereum?.chainId);
-    }
-  }, []);
+  const appChainId = getAppChainId();
 
-  const { connected } = useSDK();
-  const isOnLineaTestnet = chainId === LINEA_TESTNET_CHAIN;
-  const isOnLocal = chainId === "0x7a69";
+  const { connected, chainId } = useSDK();
 
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
-    // resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       location: {
@@ -95,9 +90,6 @@ const CreateEventForm = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    const eventFactory = await getEventFactoryContract({
-      permission: ContractPermission.WRITE,
-    });
 
     const {
       title,
@@ -110,39 +102,54 @@ const CreateEventForm = () => {
       image,
     } = values;
 
-    startTransition(async () => {
-      const formData = new FormData();
-      let imageHash: string | undefined;
+    const formData = new FormData();
+    let imageHash: string | undefined;
 
-      if (image) {
-        formData.append("file", image);
-        imageHash = await add(formData);
+    if (image) {
+      formData.append("file", image);
+      const response  = await fetch('/api/ipfs', {
+        method: "POST",
+        body: formData
+      })
+
+      if(response.ok  ) {
+        imageHash = (await response.json()).hash
       }
+    }
 
-      const ticketPriceInWei = parseEther(ticketPrice.price.toString());
+    const ticketPriceInWei = parseEther(ticketPrice.price.toString());
 
-      try {
-        const resp = await eventFactory.createEvent(
-          title,
-          description,
-          location.placeId,
-          type,
-          imageHash || "",
-          Math.floor(dateTime.getTime() / 1000),
-          ticketPriceInWei,
-          BigInt(amountOfTickets)
-        );
+    const provider = new ethers.BrowserProvider(window.ethereum!);
 
-        await resp.wait();
-        form.reset();
-        setIsSubmitting(false);
-        router.refresh();
-        setOpen((open) => !open);
-      } catch (error) {
-        console.log(error);
-        setIsSubmitting(false);
-      }
-    });
+    const signer = await provider.getSigner();
+
+    const eventFactory = new ethers.Contract(
+      env.NEXT_PUBLIC_EVENTS_FACTORY_CONTRACT_ADDRESS,
+      EventFactoryContract.abi,
+      signer
+    ) as unknown as EventsFactory;
+
+    try {
+      const resp = await eventFactory.createEvent(
+        title,
+        description,
+        location.placeId,
+        type,
+        imageHash || "",
+        Math.floor(dateTime.getTime() / 1000),
+        ticketPriceInWei,
+        BigInt(amountOfTickets)
+      );
+
+      await resp.wait();
+      form.reset();
+      setIsSubmitting(false);
+      router.refresh();
+      setOpen((open) => !open);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -155,7 +162,7 @@ const CreateEventForm = () => {
       }}
     >
       <DialogTrigger asChild>
-        {connected && isOnLineaTestnet && (
+        {connected && chainId === appChainId && (
           <Button variant="outline" type="button">
             <span className="hidden md:block">Create event</span>
             <span className="block md:hidden">Create</span>

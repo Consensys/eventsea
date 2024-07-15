@@ -36,7 +36,7 @@ const ForYou: React.FC<Props> = ({ events }) => {
       <TableBody className="md:space-y-4">
         {events.map((event, index) => {
           return (
-            <TableRow className="md:flex md:flex-col md:border-b-0">
+            <TableRow key={event.id} className="md:flex md:flex-col md:border-b-0">
               <TableCell className="p-0">
                 <Link
                   className="grid items-center grid-cols-4 py-1 duration-100 bg-white md:border md:rounded-xl hover:bg-opacity-50"

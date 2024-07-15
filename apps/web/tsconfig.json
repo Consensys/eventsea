@@ -7,7 +7,7 @@
     "pages/_app.js",
     ".next/types/**/*.ts",
     "types/**/*.ts"
-  ],
+, "env.mjs"  ],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
