@@ -39,7 +39,8 @@
     },
     "//#copy-artifacts": {
       "dependsOn": ["blockchain#compile"],
-      "outputs": ["apps/web/lib/contracts/**"]
+      "outputs": ["apps/web/lib/contracts/**"],
+      "env": ["ACCOUNT_PRIVATE_KEY"]
     },
     "blockchain#chain": {},
     "deploy:test": { 
