@@ -16,7 +16,7 @@
         "PINATA_API_KEY",
         "NEXT_PUBLIC_PINATA_GATEWAY",
         "INFURA_IPFS_ENDPOINT",
-        "INFURA_IPFS_GATEWAY",
+        "INFURA_IPFS_GATEWAY"
       ],
       "dependsOn": ["//#copy-artifacts"],
       "outputs": ["dist/**", ".next/**"]
