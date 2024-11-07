@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { env } from "@/env.mjs";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const chainId = searchParams.get("chainId");
 
   const Auth = Buffer.from(
-    process.env.INFURA_API_KEY + ":" + process.env.INFURA_API_SECRET
+    env.INFURA_API_KEY + ":" + env.INFURA_API_SECRET
   ).toString("base64");
 
   const gasPricesResp = await fetch(

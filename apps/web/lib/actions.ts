@@ -1,23 +1,60 @@
 "use server";
 
-import { getEventContract } from "@/lib/getEventContract";
-import { getEventFactoryContract } from "@/lib/getEventFactoryContract";
-import { ContractPermission, EventSea } from "@/types";
-import { getTicketContract } from "./getTicketContract";
+import { ethers } from "ethers";
+
+import { env } from "@/env.mjs";
+import { format } from "date-fns";
+
+import { EventSea } from "@/types";
+import { getNetworkRPC } from "./utils-server";
+import EventFactoryContract from "lib/contracts/artifacts/EventsFactory.sol/EventsFactory.json";
+import EventContract from "lib/contracts/artifacts/Event.sol/Event.json";
+import TicketContract from "lib/contracts/artifacts/Ticket.sol/Ticket.json";
+import { Event, EventsFactory, Ticket } from "lib/contracts/typechain-types/";
+
+const getEventContract = async (address: string) => {
+  const network = env.NEXT_PUBLIC_CHAIN_ID;
+  const rpcUrl = await getNetworkRPC(network);
+
+  const provider = new ethers.JsonRpcProvider(rpcUrl);
+
+  return new ethers.Contract(
+    address,
+    EventContract.abi,
+    provider
+  ) as unknown as Event;
+};
+
+const getTicketContract = async (address: string) => {
+  const network = env.NEXT_PUBLIC_CHAIN_ID;
+  const rpcUrl = await getNetworkRPC(network);
+
+  const provider = new ethers.JsonRpcProvider(rpcUrl);
+
+  return new ethers.Contract(
+    address,
+    TicketContract.abi,
+    provider
+  ) as unknown as Ticket;
+};
 
 export const getEvents = async (query: string = "") => {
-  try {
-    const eventsFactory = await getEventFactoryContract({
-      permission: ContractPermission.READ,
-    });
+  const network = env.NEXT_PUBLIC_CHAIN_ID;
+  const rpcUrl = await getNetworkRPC(network);
 
+  const provider = new ethers.JsonRpcProvider(rpcUrl);
+  try {
+    const eventsFactory = new ethers.Contract(
+      env.NEXT_PUBLIC_EVENTS_FACTORY_CONTRACT_ADDRESS,
+      EventFactoryContract.abi,
+      provider
+    ) as unknown as EventsFactory;
+
+    // Just using the first 8 events as featured for now
     const eventAddresses = (await eventsFactory.getEvents()).slice(0, 8);
 
     const eventsPromises = eventAddresses.map(async (address) => {
-      const eventContract = await getEventContract({
-        address,
-        permission: ContractPermission.READ,
-      });
+      const eventContract = await getEventContract(address);
 
       const [
         title,
@@ -39,10 +76,7 @@ export const getEvents = async (query: string = "") => {
         eventContract.ticketNFT(),
       ]);
 
-      const ticketContract = await getTicketContract({
-        address: ticketNFT,
-        permission: ContractPermission.READ,
-      });
+      const ticketContract = await getTicketContract(ticketNFT);
 
       const ticketPrice = await ticketContract._ticketPrice();
       const ticketName = await ticketContract.name();
@@ -62,7 +96,9 @@ export const getEvents = async (query: string = "") => {
           name: ticketName,
         },
         eventType,
-        image,
+        image: image
+          ? `${env.INFURA_IPFS_GATEWAY}/${image}`
+          : "/images/default.png",
         dateTime: Number(date),
       } as EventSea.Event;
     });
@@ -71,8 +107,8 @@ export const getEvents = async (query: string = "") => {
 
     const lowerCaseQuery = query.toLowerCase();
 
-    return events.filter(
-      (event) => event.title?.toLowerCase().includes(lowerCaseQuery)
+    return events.filter((event) =>
+      event.title?.toLowerCase().includes(lowerCaseQuery)
     );
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -80,9 +116,48 @@ export const getEvents = async (query: string = "") => {
   }
 };
 
+export const getEventById = async (eventId: string) => {
+  const event = await getEventContract(eventId)
+
+  const eventData = await Promise.all([
+    event.title(),
+    event.description(),
+    event.location(),
+    event.eventType(),
+    event.image(),
+    event.date(),
+    event.ticketNFT(),
+  ]);
+
+  return {
+    title: eventData[0],
+    description: eventData[1],
+    location: eventData[2],
+    eventType: eventData[3],
+    image: eventData[4]
+      ? `${env.INFURA_IPFS_GATEWAY}/${eventData[4]}`
+      : "/images/default.png",
+    date: eventData[5],
+    ticketNFT: eventData[6],
+  };
+};
+
+export const getTicketById = async (ticketNFTId: string) => {
+  const ticket = await getTicketContract(ticketNFTId);
+  
+  const ticketPrice = await ticket._ticketPrice();
+
+  const ticketId = await ticket.tokenId();
+
+  return {
+    price: ticketPrice,
+    id: ticketId,
+  };
+};
+
 export const getLocationDetails = async (placeId: string) => {
   try {
-    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,geometry&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
+    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,geometry&key=${env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
 
     const response = await fetch(url);
     const data = await response.json();

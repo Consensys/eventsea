@@ -10,6 +10,8 @@ import { FC, useEffect, useMemo, useState } from "react";
 import { getDetails } from "use-places-autocomplete";
 import LocationIcon from "@/components/icons/LocationIcon";
 
+import { env } from "@/env.mjs";
+
 interface EventLocationMapProps {
   location: string;
 }
@@ -25,7 +27,7 @@ const EventLocationMap: FC<EventLocationMapProps> = ({ location }) => {
   const libraries: Libraries = useMemo(() => ["places"], []);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+    googleMapsApiKey: env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
     libraries,
   });
 

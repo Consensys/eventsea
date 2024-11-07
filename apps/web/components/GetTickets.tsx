@@ -1,14 +1,14 @@
 "use client";
 
+import { ethers, formatEther } from "ethers";
 import { useState } from "react";
 import { Button } from "./ui/Button";
-import { getTicketContract } from "@/lib/getTicketContract";
-import { ContractPermission } from "@/types";
 
 import { GasFeeCard } from "./GasFeeCard";
 import MetaMaskProvider from "@/providers/MetamaskProvider";
 import { addTokenMetadata } from "@/lib/ipfs";
-import { formatEther } from "ethers";
+import TicketContract from "lib/contracts/artifacts/Ticket.sol/Ticket.json";
+import { Ticket } from "lib/contracts/typechain-types/";
 
 interface GetTicketsProps {
   ticketPrice: bigint;
@@ -66,10 +66,16 @@ const GetTickets: React.FC<GetTicketsProps> = ({
   };
 
   const handleMinTickets = async () => {
-    const nftContract = await getTicketContract({
-      address: ticketNFT,
-      permission: ContractPermission.WRITE,
-    });
+    const provider = new ethers.BrowserProvider(window.ethereum!);
+
+    const signer = await provider.getSigner();
+
+    const ticketsContract = new ethers.Contract(
+      ticketNFT,
+      TicketContract.abi,
+      signer
+    ) as unknown as Ticket;
+
     if (numberOfTickets <= 0) {
       console.log("Please select number of tickets");
       return;
@@ -78,7 +84,7 @@ const GetTickets: React.FC<GetTicketsProps> = ({
       const Hash = await handleUploadSVG();
       const totalAmount = ticketPrice * BigInt(numberOfTickets);
       const token = (
-        await nftContract.mint(
+        await ticketsContract.mint(
           numberOfTickets,
           `https://ipfs.io/ipfs/${Hash}`,
           {

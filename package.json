@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "copy-artifacts": "sh ./scripts/compile-copy-abi.sh",
     "build": "turbo run build",
     "deploy:test": "turbo run deploy:test",
     "deploy:local": "turbo run deploy:local",

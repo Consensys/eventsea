@@ -1,6 +1,9 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+import { env } from "@/env.mjs";
+import { isHexString } from "ethers";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -19,13 +22,8 @@ export const formatAddress = (addr: string | undefined) => {
   return `${addr?.substring(0, 8)}...`;
 };
 
-export const getNetworkRPC = (network: string) => {
-  switch (network) {
-    case "localhost":
-      return "http://127.0.0.1:8545/";
-    case "linea-testnet":
-      return `${process.env.LINEA_TEST_RPC_ENDPOINT}/${process.env.INFURA_API_KEY}`;
-    default:
-      throw new Error(`Unsupported network: ${network}`);
-  }
+export const getAppChainId = () => {
+  return isHexString(env.NEXT_PUBLIC_CHAIN_ID)
+    ? env.NEXT_PUBLIC_CHAIN_ID
+    : `0x${parseInt(env.NEXT_PUBLIC_CHAIN_ID, 10).toString(16)}`;
 };

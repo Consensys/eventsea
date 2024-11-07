@@ -2,45 +2,37 @@
 
 import Link from "next/link";
 import { useSDK } from "@metamask/sdk-react";
+import {  isHexString } from "ethers";
 import EventSeaLogo from "../public/icons/EventSeaLogo";
 import WalletIcon from "../public/icons/WalletIcon";
 import CreateEvent from "@/components/create-event/create-event-form";
 import { Button } from "./ui/Button";
 import { SearchBar } from "./SearchBar";
-import { formatAddress } from "./../lib/utils";
+import { formatAddress, getAppChainId } from "./../lib/utils";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
 import MetaMaskProvider from "@/providers/MetamaskProvider";
-import { useEffect, useState } from "react";
 
-const LINEA_TESTNET_CHAIN = "0xe704";
+import { env } from "@/env.mjs";
+
+const appChainId = getAppChainId();
 
 const switchEthereumChain = async () => {
   if (!window.ethereum) return;
 
   await window.ethereum.request({
     method: "wallet_switchEthereumChain",
-    params: [{ chainId: LINEA_TESTNET_CHAIN }],
+    params: [{ chainId: appChainId }],
   });
 
   window.location.reload();
 };
 
 export const ConnectWalletButton = () => {
-  const [chainId, setChainId] = useState<string | null>(null);
-  const { sdk, connected, connecting, account } = useSDK();
-
-  useEffect(() => {
-    if (window?.ethereum?.chainId) {
-      setChainId(window?.ethereum?.chainId);
-    }
-  }, []);
-
-  const isOnLineaTestnet = chainId === LINEA_TESTNET_CHAIN;
-  const isOnLocal = chainId === "0x7a69";
+  const { sdk, connected, connecting, chainId, account } = useSDK();
 
   const connect = async () => {
     try {
@@ -59,7 +51,7 @@ export const ConnectWalletButton = () => {
   return (
     <div className="relative">
       {connected ? (
-        isOnLineaTestnet || isOnLocal ? (
+        chainId === appChainId ? (
           <Popover>
             <PopoverTrigger>
               <Button variant="primary">{formatAddress(account)}</Button>
@@ -81,7 +73,7 @@ export const ConnectWalletButton = () => {
           </Popover>
         ) : (
           <Button variant="destructive" onClick={switchEthereumChain}>
-            Swith to linea
+            Switch network
           </Button>
         )
       ) : (

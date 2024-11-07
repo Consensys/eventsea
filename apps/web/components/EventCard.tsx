@@ -14,7 +14,7 @@ export const EventCard = ({ event }: { event: EventSea.Event }) => {
 
   return (
     <>
-      {isLoading ? (
+      {false ? (
         <CardSkeleton image={event.image} setIsLoading={setIsLoading} />
       ) : (
         <article
@@ -24,10 +24,7 @@ export const EventCard = ({ event }: { event: EventSea.Event }) => {
           <div className="h-full overflow-hidden transition-transform duration-300 ease-in-out origin-top rounded-lg group-hover:scale-x-105">
             <Image
               src={
-                event.image
-                  ? `${process.env.NEXT_PUBLIC_PINATA_GATEWAY}/${event.image}`
-                  : "/images/default.png"
-              }
+                event.image}
               onLoad={() => setIsLoading(false)}
               objectFit="cover"
               alt={event.title}
